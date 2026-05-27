@@ -18,16 +18,14 @@ import { renderMermaid } from "./lib/render-mermaid.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const casesDir = path.join(root, "tests/cases");
-const goldenDir = path.join(root, "tests/golden");
-const diffDir = path.join(root, "tests/diff");
 const renderer = path.join(root, "diagrams/render/render.mjs");
 
 const UPDATE = process.argv.includes("--update");
 const PER_PIXEL_THRESHOLD = 0.1; // pixelmatch color sensitivity
 const MAX_DIFF_RATIO = 0.005; // up to 0.5% of pixels may differ (AA / env drift)
 
-fs.mkdirSync(goldenDir, { recursive: true });
-fs.mkdirSync(diffDir, { recursive: true });
+// Each case is self-contained: tests/cases/<name>/ holds INTENT.md, ours.html,
+// the committed golden.png, optional ref.mmd, and generated ours/ref/diff.png.
 
 const cases = fs
   .readdirSync(casesDir, { withFileTypes: true })
@@ -40,7 +38,7 @@ const results = [];
 for (const name of cases) {
   const html = path.join(casesDir, name, "ours.html");
   const out = path.join(casesDir, name, "ours.png");
-  const golden = path.join(goldenDir, `${name}.png`);
+  const golden = path.join(casesDir, name, "golden.png");
 
   // Regenerate the Mermaid reference render for the gallery (comparison only).
   const refMmd = path.join(casesDir, name, "ref.mmd");
@@ -82,7 +80,7 @@ for (const name of cases) {
   const changed = pixelmatch(a.data, b.data, diff.data, a.width, a.height, { threshold: PER_PIXEL_THRESHOLD });
   const ratio = changed / (a.width * a.height);
   if (ratio > MAX_DIFF_RATIO) {
-    fs.writeFileSync(path.join(diffDir, `${name}.png`), PNG.sync.write(diff));
+    fs.writeFileSync(path.join(casesDir, name, "diff.png"), PNG.sync.write(diff));
     results.push({ name, status: UPDATE ? "blessed (changed)" : "FAIL", detail: `${(ratio * 100).toFixed(2)}% pixels differ` });
     if (UPDATE) fs.copyFileSync(out, golden);
   } else {
@@ -108,11 +106,11 @@ function buildGallery(results) {
   const rows = results
     .map((r) => {
       const dir = `cases/${r.name}`;
-      const intent = readIfExists(path.join(casesDir, r.name, "intent.md"));
+      const intent = readIfExists(path.join(casesDir, r.name, "INTENT.md"));
       const refMmd = readIfExists(path.join(casesDir, r.name, "ref.mmd"));
       const refPng = fs.existsSync(path.join(casesDir, r.name, "ref.png")) ? `${dir}/ref.png` : null;
-      const diffPng = fs.existsSync(path.join(diffDir, `${r.name}.png`)) ? `diff/${r.name}.png` : null;
-      const goldenPng = fs.existsSync(path.join(goldenDir, `${r.name}.png`)) ? `golden/${r.name}.png` : null;
+      const diffPng = fs.existsSync(path.join(casesDir, r.name, "diff.png")) ? `${dir}/diff.png` : null;
+      const goldenPng = fs.existsSync(path.join(casesDir, r.name, "golden.png")) ? `${dir}/golden.png` : null;
       return `<section>
   <h2>${esc(r.name)} <span class="status ${r.status.replace(/[^a-z]/gi, "")}">${esc(r.status)}</span>
     ${r.detail ? `<small>${esc(r.detail)}</small>` : ""}</h2>

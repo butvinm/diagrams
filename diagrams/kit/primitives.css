@@ -1,6 +1,5 @@
-/* diagrams kit — base + primitive vocabulary.
-   Layout is done by the browser (grid/flex/relative); the kit only computes
-   connector geometry after layout. Nothing here does auto-routing. */
+/* diagrams kit — base styles and component styles.
+ * Layout is the browser's job (grid/flex/relative); the kit only computes connector geometry after layout. Nothing here auto-routes. */
 
 :root {
   --dg-ink: #2b2f36;
@@ -87,7 +86,7 @@ diagram.stack {
   padding: 28px 56px;
 }
 
-/* ---- state machine vocabulary ---- */
+/* ---- state machine components ---- */
 .state {
   display: block;
   padding: 10px 20px;

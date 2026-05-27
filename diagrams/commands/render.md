@@ -18,5 +18,5 @@ Run:
 node "${CLAUDE_PLUGIN_ROOT}/render/render.mjs" "$1" "${2:-${1%.html}.png}"
 ```
 
-(`DG_SCALE=3` for sharper output. Requires `playwright` + a Chromium browser;
-`npx playwright install chromium` once if missing.)
+(`DG_SCALE=3` for sharper output. First run auto-installs dependencies and uses
+Playwright's Chromium or falls back to system Chrome/Edge; needs Node + npm.)

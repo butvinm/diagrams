@@ -1,34 +1,24 @@
 # diagrams
 
-Manual-layout UML/technical diagrams: authored as plain **HTML + CSS**, rendered
-to **PNG** via headless Chromium. **No auto-layout, no auto-routing** — the
-author controls placement; the tool only draws connectors between anchor points.
-Built because PlantUML/Mermaid auto-layout doesn't give positional control.
+UML/technical diagrams authored as plain **HTML + CSS**, rendered to **PNG** via headless Chromium. Layout is **manual but adaptive**: no auto-layout/auto-routing engine _and_ no hardcoded coordinates — you declare structure with CSS (grid/flex/relative), boxes size to content, and connectors are measured after layout so they follow the boxes. The tool only computes connector geometry; it never routes. Built because PlantUML/Mermaid auto-layout doesn't give positional control — but pixel-coordinate drawing tools are the opposite extreme.
 
 ## How it works
 
-1. Author an HTML file with one `<diagram>`; place boxes with CSS
-   grid/flex/absolute; connect them with `<arrow from to>`.
-2. `diagrams/kit/kit.mjs` runs in the browser _after_ layout: measures element
-   geometry and draws lifelines + connectors into an SVG overlay. **A connector
-   is a pure function of its two anchor points + path style — it never routes
-   around anything. Do not add obstacle avoidance / pathfinding.**
-3. `diagrams/render/render.mjs` (Playwright) loads the file, injects the kit,
-   waits for `data-dg-ready`, and screenshots the `<diagram>` element @2x.
+1. Author an HTML file with one `<diagram>`; place boxes with CSS grid/flex/absolute; connect them with `<arrow from to>`.
+2. `diagrams/kit/kit.mjs` runs in the browser _after_ layout: measures element geometry and draws lifelines + connectors into an SVG overlay. **A connector is a pure function of its two anchor points + path style — it never routes around anything. Do not add obstacle avoidance / pathfinding.**
+3. `diagrams/render/render.mjs` (Playwright) loads the file, injects the kit, waits for `data-dg-ready`, and screenshots the `<diagram>` element @2x.
 
-The browser is the layout engine — which is why this is **Node, not Python**
-(an intentional, required deviation from the global Python preference).
+The browser is the layout engine — which is why this is **Node, not Python** (an intentional, required deviation from the global Python preference).
 
 ## Map
 
 - `diagrams/` — the shippable plugin (kit, render, skills, command, manifest)
-- `diagrams/kit/{primitives.css,kit.mjs}` — vocabulary + connector engine
+- `diagrams/kit/{primitives.css,kit.mjs}` — components & styles + connector engine
 - `diagrams/render/render.mjs` — html → png CLI
-- `diagrams/skills/diagrams/references/primitives.md` — the authoring vocabulary;
-  **read before authoring or extending diagram types**
-- `.claude/skills/dev/SKILL.md` — **dev workflow; read before changing the
-  framework or touching goldens**
-- `tests/` — `cases/<name>/{intent.md,ours.html}`, `golden/`, `run.mjs`
+- `diagrams/skills/diagrams/references/COMPONENTS.md` — the components, attributes, and styles; **read before authoring or extending diagram types**
+- `.claude/skills/dev/SKILL.md` — **dev workflow; read before changing the framework or touching goldens**
+- `tests/` — self-contained cases: `cases/<name>/{INTENT.md, ours.html, golden.png, ref.mmd?}` (golden committed; `ours/ref/diff.png` regenerated + gitignored) and `run.mjs`
+- `README.md` + `docs/` — human docs: lean landing page, then `docs/GUIDE.md` (authoring) and `docs/DEVELOPMENT.md` (harness/tests). Keep these in sync with the plugin's `COMPONENTS.md` and dev skill, which are authoritative.
 
 ## Commands
 
@@ -38,31 +28,21 @@ The browser is the layout engine — which is why this is **Node, not Python**
 
 ## Hard rules
 
-- **Snapshot ≠ correctness.** Before creating/updating any golden, verify the
-  render visually — launch a vision subagent that reads the PNG against the
-  case's `intent.md`. Never bless an unlooked-at render. Full protocol in
-  `.claude/skills/dev/SKILL.md`.
+- **Snapshot ≠ correctness.** Before creating/updating any golden, verify the render visually — launch a vision subagent that reads the PNG against the case's `INTENT.md`. Never bless an unlooked-at render. Full protocol in `.claude/skills/dev/SKILL.md`.
 - Keep connectors pure (anchors → path); no routing.
 - Default branch is `master`.
 
 ## Conventions / gotchas
 
-- `<diagram> <lifeline> <point> <arrow>` are plain _unknown_ HTML elements swept
-  post-layout — no custom-element registration.
-- `arrow` `anchor` is **space-separated**: `anchor="right left"` (src dst). A
-  hyphen would clash with compound names like `top-left`.
-- Never put `-->` inside an HTML comment — it closes the comment and leaks text
-  into the diagram.
-- Goldens are environment-sensitive (Chromium build + fonts); diff tolerance is
-  0.5% in `tests/run.mjs`.
+- `<diagram> <lifeline> <point> <arrow>` are plain _unknown_ HTML elements swept post-layout — no custom-element registration.
+- `arrow` `anchor` is **space-separated**: `anchor="right left"` (src dst). A hyphen would clash with compound names like `top-left`.
+- Never put `-->` inside an HTML comment — it closes the comment and leaks text into the diagram.
+- Goldens are environment-sensitive (Chromium build + fonts); diff tolerance is 0.5% in `tests/run.mjs`.
 
 ## Status
 
-Implemented: **`sequence`** and **state/FSM** (generic `stack` layout +
-`.state`/`.initial`/`.final` vocabulary). Engine supports `straight`/`spline`
-paths, named + fractional edge anchors, and a `curvature` knob. Mermaid
-references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium)
-and appear in the comparison gallery; cases carry an optional `ref.mmd`.
+Implemented: **`sequence`** and **state/FSM** (generic `stack` layout + `.state`/`.initial`/`.final` components). Engine supports `straight`/`spline` paths, named + fractional edge anchors, and a `curvature` knob. Mermaid references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium) and appear in the comparison gallery; cases carry an optional `ref.mmd`.
 
-TODO: deployment, class diagram types; plugin distribution bootstrap (ships Node
-code needing playwright + chromium).
+Distribution: `render/render.mjs` self-bootstraps — if `playwright` is missing it `npm install`s into `${CLAUDE_PLUGIN_ROOT}` (plugin has its own `diagrams/package.json`) on first use, and launches Playwright's Chromium or falls back to system Chrome/Edge. Verified from a clean copy with no `node_modules` and no browser download. `node_modules/` is gitignored, so the marketplace clone ships clean.
+
+TODO: deployment and class diagram types.
