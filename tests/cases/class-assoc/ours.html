@@ -1,0 +1,55 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>class-assoc</title>
+
+<style>
+  /* No layout preset — place the class boxes on a 3×2 grid ourselves. */
+  diagram.classes {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-items: center;
+    align-items: center;
+    gap: 64px 72px;
+    padding: 36px 56px;
+  }
+</style>
+
+<diagram class="classes">
+  <div class="class" id="member" style="grid-column: 1; grid-row: 1">
+    <div class="class-name">Member</div>
+    <div class="class-section">
+      <div>+ id: int</div>
+    </div>
+  </div>
+
+  <div class="class" id="library" style="grid-column: 2; grid-row: 1">
+    <div class="class-name">Library</div>
+    <div class="class-section">
+      <div>- name: string</div>
+    </div>
+    <div class="class-section">
+      <div>+ addBook(b: Book): void</div>
+    </div>
+  </div>
+
+  <div class="class" id="book" style="grid-column: 3; grid-row: 1">
+    <div class="class-name">Book</div>
+    <div class="class-section">
+      <div>+ title: string</div>
+    </div>
+  </div>
+
+  <div class="class" id="logger" style="grid-column: 2; grid-row: 2">
+    <div class="class-name">Logger</div>
+    <div class="class-section">
+      <div>+ log(msg): void</div>
+    </div>
+  </div>
+
+  <!-- Member borrows from Library: association, open arrowhead at Library -->
+  <arrow from="member" to="library" anchor="right left" head="open">borrows</arrow>
+  <!-- Library aggregates Books: hollow diamond at the whole (Library) -->
+  <arrow from="book" to="library" anchor="left right" head="diamond">books</arrow>
+  <!-- Library depends on Logger: dashed dependency, open arrowhead -->
+  <arrow from="library" to="logger" anchor="bottom top" line="dashed" head="open">«use»</arrow>
+</diagram>

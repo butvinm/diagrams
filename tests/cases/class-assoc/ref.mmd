@@ -1,0 +1,17 @@
+classDiagram
+    class Member {
+        +int id
+    }
+    class Library {
+        -string name
+        +addBook(b Book) void
+    }
+    class Book {
+        +string title
+    }
+    class Logger {
+        +log(msg) void
+    }
+    Member --> Library : borrows
+    Library o-- Book : books
+    Library ..> Logger : use
