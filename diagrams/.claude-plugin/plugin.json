@@ -1,0 +1,17 @@
+{
+  "name": "diagrams",
+  "description": "Author UML diagrams (sequence, FSM, deployment, ...) as HTML/CSS with full manual layout — no auto-placement or routing — and render to PNG via headless Chromium. Use when the user wants precise control over element positions or dislikes PlantUML/Mermaid auto-layout.",
+  "version": "0.1.0",
+  "author": {
+    "name": "butvinm"
+  },
+  "license": "MIT",
+  "userConfig": {
+    "scale": {
+      "title": "Render scale",
+      "type": "number",
+      "description": "deviceScaleFactor for PNG export; 2 or 3 give crisp output. Passed to the renderer as DG_SCALE.",
+      "default": 2
+    }
+  }
+}

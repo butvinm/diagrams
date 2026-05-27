@@ -1,0 +1,4 @@
+node_modules/
+tests/diff/
+tests/gallery.html
+tests/cases/*/ours.png

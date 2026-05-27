@@ -1,0 +1,14 @@
+{
+  "name": "diagrams",
+  "owner": {
+    "name": "butvinm"
+  },
+  "plugins": [
+    {
+      "name": "diagrams",
+      "source": "./diagrams",
+      "description": "Author UML diagrams as HTML/CSS with full manual layout (no auto-placement or routing) and render to PNG via headless Chromium.",
+      "version": "0.1.0"
+    }
+  ]
+}
