@@ -30,6 +30,12 @@ The browser is the layout engine — which is why this is **Node, not Python** (
 
 - **Snapshot ≠ correctness.** Before creating/updating any golden, verify the render visually — launch a vision subagent that reads the PNG against the case's `INTENT.md`. Never bless an unlooked-at render. Full protocol in `.claude/skills/dev/SKILL.md`.
 - Keep connectors pure (anchors → path); no routing.
+- **Keep docs in sync.** Whenever a new diagram type lands, rendering/engine behavior changes, authoring syntax changes (elements, attributes, styles, defaults), or anything else user-facing changes, update every affected surface in the same change — don't defer it:
+  - `diagrams/skills/diagrams/references/COMPONENTS.md` + the per-type `<TYPE>.md` (authoring reference; a new type gets its own file, linked from `COMPONENTS.md`).
+  - `diagrams/skills/diagrams/SKILL.md` (workflow; which type files exist).
+  - `docs/GUIDE.md` (how it works, authoring walkthrough) and `docs/DEVELOPMENT.md` (harness/goldens).
+  - `README.md` (the **Diagram types** table, quickstart, doc links).
+  - this `CLAUDE.md` (Map, Status, Conventions).
 - Default branch is `master`.
 
 ## Conventions / gotchas

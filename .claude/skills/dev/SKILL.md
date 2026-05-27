@@ -32,12 +32,11 @@ tests/
 
 ## Adding a diagram type / primitive
 
-1. Add CSS to `kit/primitives.css` and any layout pass to `kit.mjs`
-   (`applyXxxLayout` + extend `drawOverlay` if needed). Keep the rule: connectors
-   are pure functions of anchors; never route around things.
-2. Add at least one `tests/cases/<name>/` with `INTENT.md` + `ours.html` (and
-   `ref.mmd` if Mermaid has an equivalent — see `THIRD_PARTY.md`).
+1. Add CSS to `kit/primitives.css` and any layout pass to `kit.mjs` (`applyXxxLayout` + extend `drawOverlay` if needed). Keep the rule: connectors are pure functions of anchors; never route around things.
+2. Add at least one `tests/cases/<name>/` with `INTENT.md` + `ours.html` (and `ref.mmd` if Mermaid has an equivalent — see `THIRD_PARTY.md`).
 3. Run the harness and follow the verification protocol below.
+4. Document the type in its own reference file `diagrams/skills/diagrams/references/<TYPE>.md` (capitalized), and link it from `COMPONENTS.md` and `SKILL.md`. The skill reads the core `COMPONENTS.md` plus one type file, so keep types separate.
+5. The worked example in a type's reference must be **copied from a golden-tested case** (e.g. `SEQUENCE.md`'s example mirrors `tests/cases/sequence-basic/ours.html`). Keep them in sync — the reference example is only trustworthy because the case is render-verified.
 
 ## Test harness
 

@@ -9,11 +9,11 @@ allowed-tools: Read, Write, Edit, Bash
 
 Diagrams are authored as plain HTML using a small set of components and CSS styles for layout (grid / flex / relative). **The browser is the layout engine; nothing is auto-placed or auto-routed.** A headless Chromium renders the file to PNG.
 
-The full reference — components, their attributes, and styles — is in `references/COMPONENTS.md`. Read it before authoring.
+The reference lives in `references/`: read `COMPONENTS.md` for the core (boxes, `<arrow>`, anchors), then read the file for the diagram type you're drawing — `SEQUENCE.md`, `STATE.md`. Read these before authoring; load only the type you need.
 
 ## Workflow
 
-1. **Author** an `.html` file containing one `<diagram>`. Use CSS grid/flex to place boxes; connect them with `<arrow from to>`. Labels are the arrow's child content (text or HTML). See `references/COMPONENTS.md`.
+1. **Author** an `.html` file containing one `<diagram>`. Use CSS grid/flex to place boxes; connect them with `<arrow from to>`. Labels are the arrow's child content (text or HTML). See `references/COMPONENTS.md` plus the type's reference.
 2. **Render** it:
    ```bash
    node "${CLAUDE_PLUGIN_ROOT}/render/render.mjs" path/to/diagram.html path/to/out.png

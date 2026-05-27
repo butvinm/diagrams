@@ -4,18 +4,21 @@ A diagram is a single `<diagram>` element. Inside it you place boxes (any HTML, 
 
 These are **plain HTML elements** (not custom elements) processed by the kit after layout. They are styled by the kit CSS, which the renderer injects.
 
-## Components
+This file is the **core** — the components used in every diagram. For a specific diagram type, read its reference alongside this one:
 
-### `<diagram>`
+- [`SEQUENCE.md`](SEQUENCE.md) — sequence diagrams.
+- [`STATE.md`](STATE.md) — state machines / FSM.
+
+## `<diagram>`
 
 The root, and the positioning context for the connector overlay. `class` selects a layout style:
 
-- `class="sequence"` — CSS grid; columns are participants, rows are time steps.
-- `class="stack"` — a vertical centered column (handy for state machines and simple flows).
+- `class="sequence"` — CSS grid; columns are participants, rows are time steps (see `SEQUENCE.md`).
+- `class="stack"` — a vertical centered column, handy for state machines and simple flows (see `STATE.md`).
 
 Without a class, `<diagram>` is a plain block — use your own CSS (flex/grid/absolute) to place children, give each box an `id`, and connect with `<arrow>`.
 
-### Boxes
+## Boxes
 
 A box is **any HTML element** you place inside the `<diagram>` and give an `id` (so `<arrow>` can reference it). It holds any content — text or rich HTML. Style it with your own CSS, or reach for a ready-made box style:
 
@@ -31,7 +34,7 @@ A box is **any HTML element** you place inside the `<diagram>` and give an `id` 
 
 Then connect any two boxes by `id`: `<arrow from="idle" to="db">query</arrow>`.
 
-### `<arrow>` — connectors (works in any diagram)
+## `<arrow>` — connectors
 
 <!-- prettier-ignore -->
 ```html
@@ -58,50 +61,5 @@ Its attributes:
 **Label content** is the arrow's children — plain text or arbitrary HTML (`<div class="badge">…</div>`, icons, multi-line). It is positioned just above the connector midpoint.
 
 **UML edge cheatsheet:** inheritance = `head="triangle"`; dependency = `head="open" line="dashed"`; aggregation = `head="diamond"`; composition = `head="filled"`.
-
-## Sequence (`class="sequence"`)
-
-Declare participants in order; the class builds the grid columns.
-
-```html
-<diagram class="sequence" participants="alice,bob,db">
-  <lifeline col="alice">Alice</lifeline>
-  <lifeline col="bob">Bob</lifeline>
-  <lifeline col="db">DB</lifeline>
-
-  <point id="m1a" col="alice" row="1"></point>
-  <point id="m1b" col="bob" row="1"></point>
-  <arrow from="m1a" to="m1b" head="triangle">login(user, pass)</arrow>
-
-  <point id="m2a" col="db" row="2"></point>
-  <point id="m2b" col="bob" row="2"></point>
-  <arrow from="m2a" to="m2b" head="open" line="dashed">row</arrow>
-</diagram>
-```
-
-- `<lifeline col="...">` — a participant box; a dashed vertical drops from it.
-- `<point id col row>` — an invisible anchor at the center of column `col`, time step `row` (1-based). Put both endpoints of a message in the **same `row`** for a horizontal arrow; the message order is the row order.
-- A message is an `<arrow>` between two points. Return messages typically use `head="open" line="dashed"`.
-
-## State machines & generic layouts (`class="stack"`)
-
-Without a class, lay boxes out with your own CSS. `class="stack"` is a ready-made vertical centered column. State components: `.state` (rounded box), `.initial` (filled dot), `.final` (bullseye).
-
-<!-- prettier-ignore -->
-```html
-<diagram class="stack">
-  <div class="initial" id="start"></div>
-  <div class="state" id="idle">Idle</div>
-  <div class="state" id="running">Running</div>
-  <div class="final" id="end"></div>
-
-  <arrow from="start" to="idle" anchor="bottom top"></arrow>
-  <arrow from="idle" to="running" anchor="bottom:0.3 top:0.3" path="spline" curvature="0.45">start</arrow>
-  <arrow from="running" to="idle" anchor="top:0.7 bottom:0.7" path="spline" curvature="0.45">stop</arrow>
-  <arrow from="running" to="end" anchor="bottom top">done</arrow>
-</diagram>
-```
-
-A back-and-forth pair (`idle`⇄`running`) reads cleanly when each connector uses `spline` plus **different** fractional anchors, so the two curves bow apart into a lens and their labels land on opposite sides.
 
 > Avoid `-->` inside HTML comments — it closes the comment early and leaks text into the diagram.
