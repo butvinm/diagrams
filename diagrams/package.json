@@ -1,0 +1,11 @@
+{
+  "name": "diagrams-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Runtime for the diagrams plugin: the HTML/CSS kit and the PNG renderer.",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}
