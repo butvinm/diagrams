@@ -1,0 +1,61 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>deployment-cluster</title>
+
+<style>
+  /* No layout preset — load balancer on top, two web servers below it. */
+  diagram.deployment {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-items: center;
+    align-items: start;
+    column-gap: 96px;
+    row-gap: 64px;
+    padding: 36px 48px;
+  }
+</style>
+
+<diagram class="deployment">
+  <div class="node" id="lb" style="grid-column: 1 / -1; grid-row: 1">
+    <div class="node-name">
+      <div class="stereotype">«device»</div>
+      LoadBalancer
+    </div>
+    <div class="node-body">
+      <div class="artifact">
+        <div class="stereotype">«artifact»</div>
+        nginx.conf
+      </div>
+    </div>
+  </div>
+
+  <div class="node" id="web1" style="grid-column: 1; grid-row: 2">
+    <div class="node-name">
+      <div class="stereotype">«device»</div>
+      WebServer 1
+    </div>
+    <div class="node-body">
+      <div class="artifact">
+        <div class="stereotype">«artifact»</div>
+        store.war
+      </div>
+    </div>
+  </div>
+
+  <div class="node" id="web2" style="grid-column: 2; grid-row: 2">
+    <div class="node-name">
+      <div class="stereotype">«device»</div>
+      WebServer 2
+    </div>
+    <div class="node-body">
+      <div class="artifact">
+        <div class="stereotype">«artifact»</div>
+        store.war
+      </div>
+    </div>
+  </div>
+
+  <!-- Communication paths fan out from the load balancer to each web server. -->
+  <arrow from="lb" to="web1" anchor="bottom:0.3 top" head="none">«HTTP»</arrow>
+  <arrow from="lb" to="web2" anchor="bottom:0.7 top" head="none">«HTTP»</arrow>
+</diagram>

@@ -2,9 +2,10 @@
 
 ## Mermaid (test fixtures)
 
-Some test cases under `tests/cases/*/ref.mmd` are example diagram _sources_
-adapted from the Mermaid project, used as references for visual comparison only.
-Mermaid is distributed under the MIT License.
+The `tests/cases/*/ref.mmd` files are example diagram _sources_ taken from the
+Mermaid project — primarily its [`demos/`](https://github.com/mermaid-js/mermaid/tree/develop/demos)
+examples — used as references for visual comparison only (rendered by
+`tests/lib/render-mermaid.mjs`). Mermaid is distributed under the MIT License.
 
 > MIT License
 >

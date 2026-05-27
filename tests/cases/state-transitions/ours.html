@@ -1,0 +1,31 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>state-transitions</title>
+
+<style>
+  /* No layout preset — initial and State1 on top, the targets in one row below. */
+  diagram.fsm {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-items: center;
+    align-items: center;
+    column-gap: 52px;
+    row-gap: 64px;
+    padding: 28px 56px;
+  }
+</style>
+
+<diagram class="fsm">
+  <div class="initial" id="start" style="grid-column: 1 / -1; grid-row: 1"></div>
+  <div class="state" id="s1" style="grid-column: 1 / -1; grid-row: 2">State1</div>
+  <div class="state" id="s2" style="grid-column: 1; grid-row: 3">State2</div>
+  <div class="state" id="s3" style="grid-column: 2; grid-row: 3">State3</div>
+  <div class="state" id="s4" style="grid-column: 3; grid-row: 3">State4</div>
+  <div class="final" id="end" style="grid-column: 4; grid-row: 3"></div>
+
+  <arrow from="start" to="s1" anchor="bottom top"></arrow>
+  <arrow from="s1" to="s2" anchor="bottom:0.15 top">Transition 1</arrow>
+  <arrow from="s1" to="s3" anchor="bottom:0.4 top">Transition 2</arrow>
+  <arrow from="s1" to="s4" anchor="bottom:0.6 top">Transition 3</arrow>
+  <arrow from="s1" to="end" anchor="bottom:0.85 top"></arrow>
+</diagram>

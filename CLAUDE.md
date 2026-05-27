@@ -15,7 +15,7 @@ The browser is the layout engine — which is why this is **Node, not Python** (
 - `diagrams/` — the shippable plugin (kit, render, skills, command, manifest)
 - `diagrams/kit/{primitives.css,kit.mjs}` — components & styles + connector engine
 - `diagrams/render/render.mjs` — html → png CLI
-- `diagrams/skills/diagrams/references/COMPONENTS.md` — the components, attributes, and styles (core), with one file per type (`SEQUENCE.md`, `STATE.md`, `CLASS.md`); **read before authoring or extending diagram types**
+- `diagrams/skills/diagrams/references/COMPONENTS.md` — the components, attributes, and styles (core), with one file per type (`SEQUENCE.md`, `STATE.md`, `CLASS.md`, `DEPLOYMENT.md`); **read before authoring or extending diagram types**
 - `.claude/skills/dev/SKILL.md` — **dev workflow; read before changing the framework or touching goldens**
 - `tests/` — self-contained cases: `cases/<name>/{INTENT.md, ours.html, golden.png, ref.mmd?}` (golden committed; `ours/ref/diff.png` regenerated + gitignored) and `run.mjs`
 - `README.md` + `docs/` — human docs: lean landing page, then `docs/GUIDE.md` (authoring) and `docs/DEVELOPMENT.md` (harness/tests). Keep these in sync with the plugin's `COMPONENTS.md` and dev skill, which are authoritative.
@@ -36,6 +36,7 @@ The browser is the layout engine — which is why this is **Node, not Python** (
   - `docs/GUIDE.md` (how it works, authoring walkthrough) and `docs/DEVELOPMENT.md` (harness/goldens).
   - `README.md` (the **Diagram types** table, quickstart, doc links).
   - this `CLAUDE.md` (Map, Status, Conventions).
+- **≥3 test cases per diagram type; reference diagrams come from the Mermaid repo.** Every diagram type must have at least three `tests/cases/` exercising distinct features. Each case's `ref.mmd` is a real example diagram **taken from the Mermaid repository** ([`demos/*.html`](https://github.com/mermaid-js/mermaid/tree/develop/demos) — e.g. `sequence.html`, `state.html`, `classchart.html` — or the docs), copied as-is (record the source), **not hand-authored**; we then build our equivalent `ours.html` and compare in the gallery. This is the point of the suite: validate our rendering against canonical Mermaid examples. Author originals only where Mermaid has no such diagram type — e.g. deployment, whose cases have no `ref.mmd`. Attribution: `THIRD_PARTY.md` (Mermaid is MIT).
 - Default branch is `master`.
 
 ## Conventions / gotchas
@@ -47,8 +48,8 @@ The browser is the layout engine — which is why this is **Node, not Python** (
 
 ## Status
 
-Implemented: **`sequence`**, **state/FSM** (generic `stack` layout + `.state`/`.initial`/`.final` components), and **`class`** (multi-compartment `.class` boxes on your own CSS grid; `head="hollow"` for UML generalization). Engine supports `straight`/`spline` paths, named + fractional edge anchors, and a `curvature` knob. Markers: `triangle`/`hollow`/`open`/`diamond`/`filled`. Mermaid references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium) and appear in the comparison gallery; cases carry an optional `ref.mmd`.
+Implemented: **`sequence`**, **state/FSM** (generic `stack` layout + `.state`/`.initial`/`.final` components), **`class`** (multi-compartment `.class` boxes on your own CSS grid; `head="hollow"` for UML generalization), and **`deployment`** (`.node` containers holding nested `.artifact` boxes; communication paths via `head="none"`). Engine supports `straight`/`spline` paths, named + fractional edge anchors, and a `curvature` knob. Markers: `triangle`/`hollow`/`open`/`diamond`/`filled`. Mermaid references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium) and appear in the comparison gallery; cases carry an optional `ref.mmd` — except deployment, which has no Mermaid equivalent.
 
 Distribution: `render/render.mjs` self-bootstraps — if `playwright` is missing it `npm install`s into `${CLAUDE_PLUGIN_ROOT}` (plugin has its own `diagrams/package.json`) on first use, and launches Playwright's Chromium or falls back to system Chrome/Edge. Verified from a clean copy with no `node_modules` and no browser download. `node_modules/` is gitignored, so the marketplace clone ships clean.
 
-TODO: deployment diagram type.
+Roadmap: the four planned UML types (sequence, state, class, deployment) are all shipped. No type work queued.

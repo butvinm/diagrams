@@ -1,17 +1,18 @@
 classDiagram
-    class Member {
-        +int id
+  namespace Company.Project.Module {
+    class User {
+      +login(username: String, password: String)
+      +logout()
     }
-    class Library {
-        -string name
-        +addBook(b Book) void
+    class Admin {
+      +addUser(user: User)
+      +removeUser(user: User)
+      +generateReport()
     }
-    class Book {
-        +string title
+    class Report {
+      +generatePDF(reportData: List)
+      +generateCSV(reportData: List)
     }
-    class Logger {
-        +log(msg) void
-    }
-    Member --> Library : borrows
-    Library o-- Book : books
-    Library ..> Logger : use
+  }
+  Admin --> User : manages
+  Admin --> Report : generates

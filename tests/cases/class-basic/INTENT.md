@@ -1,32 +1,25 @@
 # class-basic
 
-A small UML class diagram (our rendering of the Mermaid `classDiagram` in
-`ref.mmd`). Layout is ours, not Mermaid's — only the semantics must match.
+Our rendering of Mermaid's canonical class-diagram demo. The `ref.mmd` is copied
+verbatim from the Mermaid repo (`demos/classchart.html`, the "Demo Class Diagram"
+example) at tag `mermaid@11.15.0`. Layout is ours — only the semantics must match.
 
-Five class boxes, each a bordered box with compartments separated by horizontal
-divider lines:
+A title **Demo Class Diagram** sits centered at the top.
 
-- **Drawable** — top center. Name compartment shows a `«interface»` stereotype
-  line above the bold name. One method compartment: `+ draw(): void`, in italic
-  (abstract).
-- **Shape** — center, below Drawable. Name compartment shows a `«abstract»`
-  stereotype above the name, and the name **Shape** is italic. Attribute
-  compartment: `# x: int`, `# y: int`. Method compartment: `+ move(dx, dy): void`
-  and `+ draw(): void` (the latter italic / abstract).
-- **Canvas** — left, same row as Shape. Name **Canvas**; attribute `- shapes: List`;
-  method `+ add(s: Shape): void`.
-- **Circle** — bottom left. Name **Circle**; attribute `+ radius: float`; method
-  `+ area(): float`.
-- **Rectangle** — bottom right. Name **Rectangle**; attributes `+ w: float`,
-  `+ h: float`; method `+ area(): float`.
+Four class boxes, each bordered with divider-separated compartments (name /
+attributes / methods):
 
-Relationships (all arrowheads as described, no obstacle crossing):
+- **Animal** (parent, top center): attributes `+int age`, `+String gender`;
+  methods `+isMammal()`, `+mate()`.
+- **Duck** (bottom left): `+String beakColor`; `+swim()`, `+quack()`.
+- **Fish** (bottom center): `-Listint sizeInFeet`; `-canEat()`.
+- **Zebra** (bottom right): `+bool is_wild`; `+run(List<T>, List<OT>)`,
+  `+run-nested(List<List<OT>>)` (Mermaid renders the `~T~` generics as `<...>`).
 
-1. **Shape ⇢ Drawable** — realization: a **dashed** line with a **hollow
-   triangle** head pointing up at Drawable.
-2. **Circle → Shape** and **Rectangle → Shape** — generalization: **solid**
-   lines with **hollow triangle** heads pointing up at Shape, arriving at two
-   different points along Shape's bottom edge.
-3. **Shape — Canvas** — composition: a line between Shape's left edge and Canvas's
-   right edge, ending in a **filled diamond** at Canvas (the whole). Labelled
-   `shapes`.
+Three **generalization** edges — Duck → Animal, Fish → Animal, Zebra → Animal —
+each a solid line ending in a **hollow** (white, outlined) triangle at Animal's
+bottom edge, arriving at three distinct points so the heads sit side by side.
+
+Documented divergences from the Mermaid render: layout is ours (Mermaid
+auto-places); the `%%`-commented `run-composite` line is a comment and does not
+appear. No overlap, clipping, or line crossing a box.

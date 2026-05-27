@@ -136,8 +136,9 @@ diagram.stack {
   overflow: hidden;
 }
 
-/* Name compartment: bold, centered, divider below. */
-.class-name {
+/* Title compartment: bold, centered, divider below. Shared by class + node. */
+.class-name,
+.node-name {
   padding: 7px 16px;
   border-bottom: 1px solid var(--dg-box-border);
   font-weight: 600;
@@ -157,8 +158,11 @@ diagram.stack {
   border-top: 1px solid var(--dg-box-border);
 }
 
-/* Stereotype line inside a name compartment, e.g. «interface». */
-.class .stereotype {
+/* Stereotype line, e.g. «interface» / «device». Shared by class, node, artifact. */
+.class .stereotype,
+.node .stereotype,
+.artifact .stereotype {
+  display: block;
   font-weight: normal;
   font-style: normal;
   font-size: 12px;
@@ -168,3 +172,37 @@ diagram.stack {
 /* Member/name modifiers: abstract = italic, static = underline. */
 .class .abstract { font-style: italic; }
 .class .static { text-decoration: underline; }
+
+/* ---- deployment diagram ---- */
+
+/* A node: a container (device / execution environment) drawn as a flat titled
+ * box whose body holds nested artifacts (or sub-nodes). */
+.node {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: max-content;
+  min-width: 150px;
+  border: 1.5px solid var(--dg-box-border);
+  border-radius: 4px;
+  background: var(--dg-box-bg);
+}
+
+/* The body holds nested boxes, stacked with a gap. */
+.node-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+}
+
+/* A deployed artifact: a lighter box that reads as sitting inside a node. */
+.artifact {
+  display: block;
+  padding: 7px 14px;
+  border: 1px solid var(--dg-box-border);
+  border-radius: 3px;
+  background: #fff;
+  text-align: center;
+  white-space: nowrap;
+}

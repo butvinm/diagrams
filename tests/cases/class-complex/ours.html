@@ -1,0 +1,120 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>class-complex</title>
+
+<style>
+  /* No layout preset — we place boxes so the connectors stay crossing-free
+     (the engine never routes). The three independent pairs sit on the left;
+     Class09's relations fan out into their own cluster on the right. */
+  diagram.classes {
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    justify-items: center;
+    align-items: start;
+    column-gap: 56px;
+    row-gap: 56px;
+    padding: 32px 48px;
+  }
+  .class.empty .class-section { min-height: 16px; }
+</style>
+
+<diagram class="classes">
+  <div class="class" id="class01" style="grid-column: 1; grid-row: 1">
+    <div class="class-name">
+      <div class="stereotype">«interface»</div>
+      Class01
+    </div>
+    <div class="class-section">
+      <div>-int chimp</div>
+      <div>+int gorilla</div>
+    </div>
+    <div class="class-section">
+      <div>#size()</div>
+    </div>
+  </div>
+
+  <div class="class empty" id="class03" style="grid-column: 2; grid-row: 1">
+    <div class="class-name">Class03</div>
+    <div class="class-section"></div>
+  </div>
+
+  <div class="class empty" id="class05" style="grid-column: 3; grid-row: 1">
+    <div class="class-name">Class05</div>
+    <div class="class-section"></div>
+  </div>
+
+  <div class="class" id="class10" style="grid-column: 4; grid-row: 1">
+    <div class="class-name">
+      <div class="stereotype">«service»</div>
+      Class10
+    </div>
+    <div class="class-section">
+      <div>int id</div>
+    </div>
+    <div class="class-section">
+      <div>size()</div>
+    </div>
+  </div>
+
+  <div class="class empty" id="class09" style="grid-column: 5; grid-row: 1">
+    <div class="class-name">Class09</div>
+    <div class="class-section"></div>
+  </div>
+
+  <div class="class empty" id="averylongclass" style="grid-column: 1; grid-row: 2">
+    <div class="class-name">AveryLongClass</div>
+    <div class="class-section"></div>
+  </div>
+
+  <div class="class empty" id="class04" style="grid-column: 2; grid-row: 2">
+    <div class="class-name">Class04</div>
+    <div class="class-section"></div>
+  </div>
+
+  <div class="class empty" id="class06" style="grid-column: 3; grid-row: 2">
+    <div class="class-name">Class06</div>
+    <div class="class-section"></div>
+  </div>
+
+  <div class="class empty" id="c3" style="grid-column: 4; grid-row: 2">
+    <div class="class-name">C3</div>
+    <div class="class-section"></div>
+  </div>
+
+  <div class="class" id="class07" style="grid-column: 6; grid-row: 2">
+    <div class="class-name">Class07</div>
+    <div class="class-section">
+      <div>Object[] elementData</div>
+    </div>
+    <div class="class-section">
+      <div>equals()</div>
+    </div>
+  </div>
+
+  <div class="class" id="class08" style="grid-column: 6; grid-row: 3">
+    <div class="class-name">Class08</div>
+    <div class="class-section"></div>
+  </div>
+
+  <div class="class empty" id="c2" style="grid-column: 5; grid-row: 4">
+    <div class="class-name">C2</div>
+    <div class="class-section"></div>
+  </div>
+
+  <!-- AveryLongClass inherits Class01: hollow triangle. -->
+  <arrow from="averylongclass" to="class01" anchor="top bottom" head="hollow">Cool</arrow>
+  <!-- Class03 composes Class04: filled diamond at the whole (Class03). -->
+  <arrow from="class04" to="class03" anchor="top bottom" head="filled"></arrow>
+  <!-- Class05 aggregates Class06: hollow diamond at the whole (Class05). -->
+  <arrow from="class06" to="class05" anchor="top bottom" head="diamond"></arrow>
+  <!-- Class09 composes C3: filled diamond at C3. -->
+  <arrow from="class09" to="c3" anchor="bottom:0.2 top" head="filled"></arrow>
+  <!-- Class09 inherits Class07: hollow triangle, into Class07's top. -->
+  <arrow from="class09" to="class07" anchor="bottom:0.85 top" head="hollow"></arrow>
+  <!-- Class09 to C2: association, open arrow at C2 (straight down). -->
+  <arrow from="class09" to="c2" anchor="bottom:0.5 top" head="open">Where am i?</arrow>
+  <!-- Class07 depends on Class08: dotted, no head. -->
+  <arrow from="class07" to="class08" anchor="bottom top" line="dotted" head="none"></arrow>
+  <!-- Class08 with C2: bidirectional association, attached to Class08's bottom. -->
+  <arrow from="class08" to="c2" anchor="bottom right" tail="open" head="open">Cool label</arrow>
+</diagram>

@@ -3,53 +3,74 @@
 <title>class-assoc</title>
 
 <style>
-  /* No layout preset — place the class boxes on a 3×2 grid ourselves. */
   diagram.classes {
+    display: block;
+    width: max-content;
+    padding: 28px 44px;
+  }
+  /* Namespace frames: nested labelled rectangles (Company > Project > Module). */
+  .ns {
+    position: relative;
+    border: 1px solid var(--dg-box-border);
+    border-radius: 4px;
+    padding: 28px 18px 18px;
+  }
+  .ns > .ns-label {
+    position: absolute;
+    top: 7px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+  .ns-inner {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(2, auto);
     justify-items: center;
-    align-items: center;
-    gap: 64px 72px;
-    padding: 36px 56px;
+    align-items: start;
+    gap: 56px 72px;
   }
 </style>
 
 <diagram class="classes">
-  <div class="class" id="member" style="grid-column: 1; grid-row: 1">
-    <div class="class-name">Member</div>
-    <div class="class-section">
-      <div>+ id: int</div>
+  <div class="ns">
+    <div class="ns-label">Company</div>
+    <div class="ns">
+      <div class="ns-label">Project</div>
+      <div class="ns">
+        <div class="ns-label">Module</div>
+        <div class="ns-inner">
+          <div class="class" id="admin" style="grid-column: 1 / -1; grid-row: 1">
+            <div class="class-name">Admin</div>
+            <div class="class-section">
+              <div>+addUser(user: User)</div>
+              <div>+removeUser(user: User)</div>
+              <div>+generateReport()</div>
+            </div>
+          </div>
+
+          <div class="class" id="user" style="grid-column: 1; grid-row: 2">
+            <div class="class-name">User</div>
+            <div class="class-section">
+              <div>+login(username: String, password: String)</div>
+              <div>+logout()</div>
+            </div>
+          </div>
+
+          <div class="class" id="report" style="grid-column: 2; grid-row: 2">
+            <div class="class-name">Report</div>
+            <div class="class-section">
+              <div>+generatePDF(reportData: List)</div>
+              <div>+generateCSV(reportData: List)</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="class" id="library" style="grid-column: 2; grid-row: 1">
-    <div class="class-name">Library</div>
-    <div class="class-section">
-      <div>- name: string</div>
-    </div>
-    <div class="class-section">
-      <div>+ addBook(b: Book): void</div>
-    </div>
-  </div>
-
-  <div class="class" id="book" style="grid-column: 3; grid-row: 1">
-    <div class="class-name">Book</div>
-    <div class="class-section">
-      <div>+ title: string</div>
-    </div>
-  </div>
-
-  <div class="class" id="logger" style="grid-column: 2; grid-row: 2">
-    <div class="class-name">Logger</div>
-    <div class="class-section">
-      <div>+ log(msg): void</div>
-    </div>
-  </div>
-
-  <!-- Member borrows from Library: association, open arrowhead at Library -->
-  <arrow from="member" to="library" anchor="right left" head="open">borrows</arrow>
-  <!-- Library aggregates Books: hollow diamond at the whole (Library) -->
-  <arrow from="book" to="library" anchor="left right" head="diamond">books</arrow>
-  <!-- Library depends on Logger: dashed dependency, open arrowhead -->
-  <arrow from="library" to="logger" anchor="bottom top" line="dashed" head="open">«use»</arrow>
+  <!-- Associations: Admin manages User, Admin generates Report (open arrowheads). -->
+  <arrow from="admin" to="user" anchor="bottom:0.3 top" head="open">manages</arrow>
+  <arrow from="admin" to="report" anchor="bottom:0.7 top" head="open">generates</arrow>
 </diagram>

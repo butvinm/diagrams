@@ -51,82 +51,75 @@ This is `tests/cases/class-basic/ours.html` — a render-verified golden, so the
 <!-- prettier-ignore -->
 ```html
 <style>
-  /* No layout preset — place the class boxes on a 3×3 grid ourselves. */
+  /* No layout preset — place the class boxes on a grid ourselves. */
   diagram.classes {
     display: grid;
     grid-template-columns: repeat(3, auto);
     justify-items: center;
     align-items: start;
     gap: 56px 64px;
-    padding: 32px 48px;
+    padding: 24px 48px 32px;
+  }
+  .diagram-title {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 4px;
   }
 </style>
 
 <diagram class="classes">
-  <div class="class" id="drawable" style="grid-column: 2; grid-row: 1">
-    <div class="class-name">
-      <div class="stereotype">«interface»</div>
-      Drawable
+  <div class="diagram-title">Demo Class Diagram</div>
+
+  <div class="class" id="animal" style="grid-column: 2; grid-row: 2">
+    <div class="class-name">Animal</div>
+    <div class="class-section">
+      <div>+int age</div>
+      <div>+String gender</div>
     </div>
     <div class="class-section">
-      <div class="abstract">+ draw(): void</div>
+      <div>+isMammal()</div>
+      <div>+mate()</div>
     </div>
   </div>
 
-  <div class="class" id="canvas" style="grid-column: 1; grid-row: 2">
-    <div class="class-name">Canvas</div>
+  <div class="class" id="duck" style="grid-column: 1; grid-row: 3">
+    <div class="class-name">Duck</div>
     <div class="class-section">
-      <div>- shapes: List</div>
+      <div>+String beakColor</div>
     </div>
     <div class="class-section">
-      <div>+ add(s: Shape): void</div>
+      <div>+swim()</div>
+      <div>+quack()</div>
     </div>
   </div>
 
-  <div class="class" id="shape" style="grid-column: 2; grid-row: 2">
-    <div class="class-name abstract">
-      <div class="stereotype">«abstract»</div>
-      Shape
+  <div class="class" id="fish" style="grid-column: 2; grid-row: 3">
+    <div class="class-name">Fish</div>
+    <div class="class-section">
+      <div>-Listint sizeInFeet</div>
     </div>
     <div class="class-section">
-      <div># x: int</div>
-      <div># y: int</div>
-    </div>
-    <div class="class-section">
-      <div>+ move(dx, dy): void</div>
-      <div class="abstract">+ draw(): void</div>
+      <div>-canEat()</div>
     </div>
   </div>
 
-  <div class="class" id="circle" style="grid-column: 1; grid-row: 3">
-    <div class="class-name">Circle</div>
+  <div class="class" id="zebra" style="grid-column: 3; grid-row: 3">
+    <div class="class-name">Zebra</div>
     <div class="class-section">
-      <div>+ radius: float</div>
+      <div>+bool is_wild</div>
     </div>
     <div class="class-section">
-      <div>+ area(): float</div>
-    </div>
-  </div>
-
-  <div class="class" id="rectangle" style="grid-column: 3; grid-row: 3">
-    <div class="class-name">Rectangle</div>
-    <div class="class-section">
-      <div>+ w: float</div>
-      <div>+ h: float</div>
-    </div>
-    <div class="class-section">
-      <div>+ area(): float</div>
+      <div>+run(List&lt;T&gt;, List&lt;OT&gt;)</div>
+      <div>+run-nested(List&lt;List&lt;OT&gt;&gt;)</div>
     </div>
   </div>
 
-  <!-- Shape realizes Drawable: dashed line, hollow triangle -->
-  <arrow from="shape" to="drawable" anchor="top bottom" line="dashed" head="hollow"></arrow>
-  <!-- Circle and Rectangle inherit Shape: solid line, hollow triangle -->
-  <arrow from="circle" to="shape" anchor="top bottom:0.3" head="hollow"></arrow>
-  <arrow from="rectangle" to="shape" anchor="top bottom:0.7" head="hollow"></arrow>
-  <!-- Canvas is composed of Shapes: filled diamond at the whole (Canvas) -->
-  <arrow from="shape" to="canvas" anchor="left right" head="filled">shapes</arrow>
+  <!-- Generalization: each child inherits Animal — solid line, hollow triangle. -->
+  <arrow from="duck" to="animal" anchor="top bottom:0.25" head="hollow"></arrow>
+  <arrow from="fish" to="animal" anchor="top bottom:0.5" head="hollow"></arrow>
+  <arrow from="zebra" to="animal" anchor="top bottom:0.75" head="hollow"></arrow>
 </diagram>
 ```
 
-The two generalization arrows land on Shape's bottom edge at `bottom:0.3` and `bottom:0.7` so their hollow triangles sit side by side instead of piling onto one point — the same fractional-anchor trick used for back-and-forth transitions in [`STATE.md`](STATE.md).
+The three generalization arrows land on Animal's bottom edge at `bottom:0.25`, `0.5`, and `0.75` so their hollow triangles sit side by side instead of piling onto one point — the same fractional-anchor trick used for back-and-forth transitions in [`STATE.md`](STATE.md). For associations see the `class-assoc` case; for aggregation (`head="diamond"`), composition (`head="filled"`), dependency, and bidirectional links see the `class-complex` case; for the full relationship set see the table above.

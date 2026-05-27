@@ -45,12 +45,12 @@ Then describe the diagram — _"draw a login sequence: Alice → auth service �
 
 ## Diagram types
 
-| Type        | Status  |
-| ----------- | ------- |
-| Sequence    | ✅      |
-| State / FSM | ✅      |
-| Class       | ✅      |
-| Deployment  | planned |
+| Type        | Status |
+| ----------- | ------ |
+| Sequence    | ✅     |
+| State / FSM | ✅     |
+| Class       | ✅     |
+| Deployment  | ✅     |
 
 Everything is boxes + arrows under the hood; a "type" is just a layout convention and a few CSS styles on top of one engine.
 

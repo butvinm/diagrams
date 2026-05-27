@@ -9,7 +9,7 @@ allowed-tools: Read, Write, Edit, Bash
 
 Diagrams are authored as plain HTML using a small set of components and CSS styles for layout (grid / flex / relative). **The browser is the layout engine; nothing is auto-placed or auto-routed.** A headless Chromium renders the file to PNG.
 
-The reference lives in `references/`: read `COMPONENTS.md` for the core (boxes, `<arrow>`, anchors), then read the file for the diagram type you're drawing — `SEQUENCE.md`, `STATE.md`, `CLASS.md`. Read these before authoring; load only the type you need.
+The reference lives in `references/`: read `COMPONENTS.md` for the core (boxes, `<arrow>`, anchors), then read the file for the diagram type you're drawing — `SEQUENCE.md`, `STATE.md`, `CLASS.md`, `DEPLOYMENT.md`. Read these before authoring; load only the type you need.
 
 ## Workflow
 

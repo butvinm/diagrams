@@ -1,0 +1,58 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>deployment-basic</title>
+
+<style>
+  /* No layout preset — lay the nodes out in a row ourselves. */
+  diagram.deployment {
+    display: flex;
+    align-items: center;
+    gap: 72px;
+    padding: 36px 48px;
+  }
+</style>
+
+<diagram class="deployment">
+  <div class="node" id="client">
+    <div class="node-name">
+      <div class="stereotype">«device»</div>
+      Client
+    </div>
+    <div class="node-body">
+      <div class="artifact" id="browser">
+        <div class="stereotype">«artifact»</div>
+        browser.app
+      </div>
+    </div>
+  </div>
+
+  <div class="node" id="web">
+    <div class="node-name">
+      <div class="stereotype">«executionEnvironment»</div>
+      Tomcat
+    </div>
+    <div class="node-body">
+      <div class="artifact" id="war">
+        <div class="stereotype">«artifact»</div>
+        store.war
+      </div>
+    </div>
+  </div>
+
+  <div class="node" id="db">
+    <div class="node-name">
+      <div class="stereotype">«device»</div>
+      DBServer
+    </div>
+    <div class="node-body">
+      <div class="artifact" id="schema">
+        <div class="stereotype">«artifact»</div>
+        schema.sql
+      </div>
+    </div>
+  </div>
+
+  <!-- Communication paths: undirected solid lines labelled with a protocol. -->
+  <arrow from="client" to="web" anchor="right left" head="none">«HTTP»</arrow>
+  <arrow from="web" to="db" anchor="right left" head="none">«JDBC»</arrow>
+</diagram>

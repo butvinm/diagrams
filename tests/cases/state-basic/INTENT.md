@@ -1,17 +1,21 @@
 # state-basic
 
-A simple state machine (our rendering of the Mermaid `stateDiagram-v2` in
-`ref.mmd`). Layout is ours, not Mermaid's — only the semantics must match.
+Our rendering of Mermaid's canonical state-machine demo. The `ref.mmd` is copied
+verbatim from the Mermaid repo (`demos/state.html`, the Still/Moving/Crash example
+using the `:::` style operator) at tag `mermaid@11.15.0`. Layout is ours; only the
+semantics must match.
 
-Top to bottom:
+Top to bottom, a vertical chain:
 
-1. An **initial** pseudo-state (filled dot).
-2. Arrow down into state **Idle**.
-3. Between **Idle** and **Running**, two curved transitions forming a lens:
-   - `start`: Idle → Running (downward).
-   - `stop`: Running → Idle (upward).
-     The two labels must not overlap.
-4. State **Running**.
-5. `done`: Running → **final** pseudo-state (ringed dot / bullseye).
+1. Initial pseudo-state (filled dot) → **Still**.
+2. **Still** and **Moving** form a back-and-forth lens: `Still → Moving` and
+   `Moving → Still`, two curved transitions bowing apart (labels n/a).
+3. **Moving → Crash**.
+4. **Crash →** final pseudo-state (ringed bullseye).
+5. **Still →** the same final pseudo-state, via a long curve that bypasses Moving
+   and Crash on the left.
 
-All transition arrows have filled triangle heads.
+All transition heads are filled triangles. Documented divergences: the Mermaid
+source applies `classDef`/`:::` styles (Still white, Moving italic, Crash
+red/yellow) — we ignore styling and render plain states. Layout is ours. No line
+crosses a box.

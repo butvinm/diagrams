@@ -1,0 +1,46 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>deployment-nested</title>
+
+<style>
+  /* No layout preset — external artifact on the left, the node on the right. */
+  diagram.deployment {
+    display: flex;
+    align-items: center;
+    gap: 96px;
+    padding: 36px 48px;
+  }
+</style>
+
+<diagram class="deployment">
+  <!-- An artifact drawn outside its node; deployed via a «deploy» arrow. -->
+  <div class="artifact" id="config">
+    <div class="stereotype">«artifact»</div>
+    config.yml
+  </div>
+
+  <div class="node" id="appserver">
+    <div class="node-name">
+      <div class="stereotype">«device»</div>
+      AppServer
+    </div>
+    <div class="node-body">
+      <!-- A node nested inside another node. -->
+      <div class="node" id="jvm">
+        <div class="node-name">
+          <div class="stereotype">«executionEnvironment»</div>
+          JVM
+        </div>
+        <div class="node-body">
+          <div class="artifact" id="jar">
+            <div class="stereotype">«artifact»</div>
+            app.jar
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- config.yml is deployed onto AppServer: dashed «deploy» dependency. -->
+  <arrow from="config" to="appserver" anchor="right left" line="dashed" head="open">«deploy»</arrow>
+</diagram>

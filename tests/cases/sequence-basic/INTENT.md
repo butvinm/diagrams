@@ -1,15 +1,17 @@
 # sequence-basic
 
-A login sequence across three participants: **Alice**, **Bob** (an auth service),
-and **DB**.
+Our rendering of a Mermaid sequence demo. The `ref.mmd` is copied verbatim from
+the Mermaid repo (`demos/sequence.html`, the "With forced menus" example) at tag
+`mermaid@11.15.0`. Layout is ours; only the semantics must match.
 
-Expected, top to bottom:
+Two participants, **Alice** and **John**, each a header box with a dashed
+lifeline hanging below it. Three messages, top to bottom:
 
-1. Alice → Bob: `login(user, pass)` — solid line, filled triangle head.
-2. Bob → DB: `SELECT * FROM users` — solid line, filled triangle head.
-3. DB ⇢ Bob: `row` — dashed return, open head.
-4. Bob ⇢ Alice: `token` — dashed return, open head.
+1. Alice → John: `Hello John, how are you?` — solid line, filled triangle head.
+2. John ⇢ Alice: `Great!` — dashed line, filled triangle head (a return).
+3. Alice → John: `See you later!` — solid line, **open** head (an async message,
+   Mermaid's `-)`).
 
-Three vertical dashed lifelines hang under the three participant boxes.
-Messages are horizontal, evenly spaced, in the order above. Return messages
-point back to the left.
+Documented divergences: the Mermaid source attaches `link`/`forceMenus` dropdown
+menus to the participants — those are interactive affordances with no static
+equivalent, so we omit them. Layout is ours.

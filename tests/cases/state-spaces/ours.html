@@ -1,0 +1,34 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>state-spaces</title>
+
+<style>
+  /* No layout preset — initial fans to two states that merge into one. */
+  diagram.fsm {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-items: center;
+    align-items: center;
+    column-gap: 90px;
+    row-gap: 56px;
+    padding: 28px 56px;
+  }
+  #yswsii {
+    max-width: 150px;
+    text-align: center;
+  }
+</style>
+
+<diagram class="fsm">
+  <div class="initial" id="start" style="grid-column: 1 / -1; grid-row: 1"></div>
+  <div class="state" id="other" style="grid-column: 1; grid-row: 2">SomeOtherState</div>
+  <div class="state" id="yswsii" style="grid-column: 2; grid-row: 2">Your state with spaces in it</div>
+  <div class="state" id="yet" style="grid-column: 1 / -1; grid-row: 3">YetAnotherState</div>
+  <div class="final" id="end" style="grid-column: 1 / -1; grid-row: 4"></div>
+
+  <arrow from="start" to="other" anchor="bottom top"></arrow>
+  <arrow from="start" to="yswsii" anchor="bottom top"></arrow>
+  <arrow from="other" to="yet" anchor="bottom top:0.3"></arrow>
+  <arrow from="yswsii" to="yet" anchor="bottom top:0.7"></arrow>
+  <arrow from="yet" to="end" anchor="bottom top"></arrow>
+</diagram>

@@ -1,29 +1,30 @@
+---
+title: Demo Class Diagram
+---
 classDiagram
-    class Drawable {
-        <<interface>>
-        +draw() void
-    }
-    class Shape {
-        <<abstract>>
-        #int x
-        #int y
-        +move(dx, dy) void
-        +draw() void
-    }
-    class Canvas {
-        -List shapes
-        +add(s Shape) void
-    }
-    class Circle {
-        +float radius
-        +area() float
-    }
-    class Rectangle {
-        +float w
-        +float h
-        +area() float
-    }
-    Drawable <|.. Shape
-    Shape <|-- Circle
-    Shape <|-- Rectangle
-    Canvas *-- Shape : shapes
+  accTitle: Demo Class Diagram
+  accDescr: This class diagram show the abstract Animal class, and 3 classes that inherit from it: Duck, Fish, and Zebra.
+
+  Animal <|-- Duck
+  Animal <|-- Fish
+  Animal <|-- Zebra
+  Animal : +int age
+  Animal : +String gender
+  Animal: +isMammal()
+  Animal: +mate()
+
+  class Duck{
+    +String beakColor
+    +swim()
+    +quack()
+  }
+  class Fish{
+    -Listint sizeInFeet
+    -canEat()
+  }
+  class Zebra{
+    +bool is_wild
+    +run(List~T~, List~OT~)
+    %% +run-composite(List~T, K~)
+    +run-nested(List~List~OT~~)
+  }
