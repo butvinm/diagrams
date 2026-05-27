@@ -75,3 +75,49 @@ arrow {
   padding: 0 5px;
 }
 arrow:empty { display: none; }
+
+/* ---- generic layouts (any diagram without a preset) ---- */
+
+/* Vertical centered stack — handy for state machines and simple flows. */
+diagram.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: 28px 56px;
+}
+
+/* ---- state machine vocabulary ---- */
+.state {
+  display: block;
+  padding: 10px 20px;
+  border: 1.5px solid var(--dg-box-border);
+  border-radius: 10px;
+  background: var(--dg-box-bg);
+  font-weight: 600;
+}
+
+/* Initial pseudo-state: a filled dot. */
+.initial {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--dg-ink);
+}
+
+/* Final pseudo-state: a ringed dot (bullseye). */
+.final {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--dg-ink);
+  border-radius: 50%;
+  background: #fff;
+}
+.final::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--dg-ink);
+}

@@ -58,6 +58,11 @@ The browser is the layout engine — which is why this is **Node, not Python**
 
 ## Status
 
-Implemented: **`sequence`** only. TODO: FSM, deployment, class types; plugin
-distribution bootstrap (ships Node code needing playwright + chromium); Mermaid
-`ref.mmd` fixtures + `mmdc` rendering wired into the gallery.
+Implemented: **`sequence`** and **state/FSM** (generic `stack` layout +
+`.state`/`.initial`/`.final` vocabulary). Engine supports `straight`/`spline`
+paths, named + fractional edge anchors, and a `curvature` knob. Mermaid
+references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium)
+and appear in the comparison gallery; cases carry an optional `ref.mmd`.
+
+TODO: deployment, class diagram types; plugin distribution bootstrap (ships Node
+code needing playwright + chromium).

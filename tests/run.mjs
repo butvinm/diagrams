@@ -14,6 +14,7 @@ import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { PNG } from "pngjs";
 import pixelmatch from "pixelmatch";
+import { renderMermaid } from "./lib/render-mermaid.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const casesDir = path.join(root, "tests/cases");
@@ -40,6 +41,17 @@ for (const name of cases) {
   const html = path.join(casesDir, name, "ours.html");
   const out = path.join(casesDir, name, "ours.png");
   const golden = path.join(goldenDir, `${name}.png`);
+
+  // Regenerate the Mermaid reference render for the gallery (comparison only).
+  const refMmd = path.join(casesDir, name, "ref.mmd");
+  if (fs.existsSync(refMmd)) {
+    try {
+      const res = await renderMermaid(fs.readFileSync(refMmd, "utf8"), path.join(casesDir, name, "ref.png"));
+      if (!res.ok) console.error(`  [mermaid] ${name}: ${res.error}`);
+    } catch (e) {
+      console.error(`  [mermaid] ${name}: ${e.message}`);
+    }
+  }
 
   try {
     execFileSync("node", [renderer, html, out], { stdio: "pipe" });

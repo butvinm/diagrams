@@ -38,25 +38,41 @@ function boxIn(el, origin) {
   return { x: r.left - origin.left, y: r.top - origin.top, w: r.width, h: r.height };
 }
 
+// Anchor name is either a named point ("top", "bottom-left", ...) or a
+// fractional edge position "<side>:<frac>" (e.g. "bottom:0.3" = 30% across the
+// bottom edge), which lets several connectors attach to one box without piling
+// onto the same point.
 function anchorPoint(box, name) {
+  if (name && name.includes(":")) {
+    const [side, raw] = name.split(":");
+    const f = Math.min(1, Math.max(0, parseFloat(raw)));
+    if (side === "top") return [box.x + f * box.w, box.y];
+    if (side === "bottom") return [box.x + f * box.w, box.y + box.h];
+    if (side === "left") return [box.x, box.y + f * box.h];
+    if (side === "right") return [box.x + box.w, box.y + f * box.h];
+  }
   return (ANCHORS[name] || ANCHORS.center)(box);
 }
 
-function straightPath(p1, p2) {
-  return `M ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]}`;
-}
-
-// Quadratic Bézier bowed perpendicular to the chord by `k * length`.
-function splinePath(p1, p2, k = 0.18) {
+// Returns the SVG path `d` and the on-path midpoint used to place the label.
+// A `spline` is a quadratic Bézier bowed perpendicular to the chord by
+// `k * length`; because the bow flips when the endpoints swap, two opposite
+// connectors between the same pair separate into a symmetric lens, and their
+// labels land on opposite sides instead of colliding at the chord midpoint.
+function connectorGeometry(p1, p2, shape, k = 0.18) {
   const mx = (p1[0] + p2[0]) / 2;
   const my = (p1[1] + p2[1]) / 2;
+  if (shape !== "spline") {
+    return { d: `M ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]}`, mid: [mx, my] };
+  }
   const dx = p2[0] - p1[0];
   const dy = p2[1] - p1[1];
   const len = Math.hypot(dx, dy) || 1;
-  const nx = -dy / len;
-  const ny = dx / len;
   const off = k * len;
-  return `M ${p1[0]} ${p1[1]} Q ${mx + nx * off} ${my + ny * off} ${p2[0]} ${p2[1]}`;
+  const cx = mx + (-dy / len) * off;
+  const cy = my + (dx / len) * off;
+  const mid = [0.25 * p1[0] + 0.5 * cx + 0.25 * p2[0], 0.25 * p1[1] + 0.5 * cy + 0.25 * p2[1]];
+  return { d: `M ${p1[0]} ${p1[1]} Q ${cx} ${cy} ${p2[0]} ${p2[1]}`, mid };
 }
 
 function el(name, attrs = {}) {
@@ -133,10 +149,11 @@ function drawOverlay(diagram) {
     const p1 = anchorPoint(boxIn(from, origin), sa);
     const p2 = anchorPoint(boxIn(to, origin), ta);
     const shape = a.getAttribute("path") || "straight";
-    const d = shape === "spline" ? splinePath(p1, p2) : straightPath(p1, p2);
+    const k = parseFloat(a.getAttribute("curvature"));
+    const geom = connectorGeometry(p1, p2, shape, Number.isFinite(k) ? k : 0.18);
 
     const path = el("path", {
-      d, fill: "none", stroke: "var(--dg-line)", "stroke-width": 1.6,
+      d: geom.d, fill: "none", stroke: "var(--dg-line)", "stroke-width": 1.6,
     });
     if ((a.getAttribute("line") || "solid") === "dashed") path.setAttribute("stroke-dasharray", "6 5");
     if (a.getAttribute("line") === "dotted") path.setAttribute("stroke-dasharray", "2 4");
@@ -148,10 +165,8 @@ function drawOverlay(diagram) {
 
     // Place the arrow's label content just above the path midpoint.
     if (a.textContent.trim() || a.children.length) {
-      const mx = (p1[0] + p2[0]) / 2;
-      const my = (p1[1] + p2[1]) / 2;
-      a.style.left = `${mx}px`;
-      a.style.top = `${my - 6}px`;
+      a.style.left = `${geom.mid[0]}px`;
+      a.style.top = `${geom.mid[1] - 6}px`;
       a.style.transform = "translate(-50%, -100%)";
     }
   });
