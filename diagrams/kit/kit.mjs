@@ -96,12 +96,13 @@ function defineMarkers(defs) {
     defs.appendChild(m);
   };
   mk("dg-triangle", el("path", { d: "M0,0 L10,5 L0,10 z", fill: "var(--dg-line)" }), { refX: 9, refY: 5 });
+  mk("dg-hollow", el("path", { d: "M0,0 L12,6 L0,12 z", fill: "#fff", stroke: "var(--dg-line)", "stroke-width": 1.4 }), { refX: 11, refY: 6 });
   mk("dg-open", el("path", { d: "M0,0 L10,5 L0,10", fill: "none", stroke: "var(--dg-line)", "stroke-width": 1.6 }), { refX: 9, refY: 5 });
   mk("dg-diamond", el("path", { d: "M0,5 L6,0 L12,5 L6,10 z", fill: "#fff", stroke: "var(--dg-line)", "stroke-width": 1.4 }), { refX: 11, refY: 5 });
   mk("dg-filled", el("path", { d: "M0,5 L6,0 L12,5 L6,10 z", fill: "var(--dg-line)" }), { refX: 11, refY: 5 });
 }
 
-const HEADS = { triangle: "dg-triangle", open: "dg-open", diamond: "dg-diamond", filled: "dg-filled", none: null };
+const HEADS = { triangle: "dg-triangle", hollow: "dg-hollow", open: "dg-open", diamond: "dg-diamond", filled: "dg-filled", none: null };
 
 function applySequenceLayout(diagram) {
   const parts = (diagram.getAttribute("participants") || "")

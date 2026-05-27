@@ -9,12 +9,14 @@ So the layout is **manual but adaptive**. You decide the arrangement, not a gues
 The usual cost of writing layout by hand is verbosity. The answer: **you don't write it — Claude does.** This ships as a Claude Code plugin; you describe the diagram, Claude emits the HTML, you nudge a value, re-render.
 
 <p align="center">
-  <img src="tests/cases/sequence-basic/golden.png" height="230" alt="sequence diagram" />
+  <img src="tests/cases/sequence-basic/golden.png" height="210" alt="sequence diagram" />
   &nbsp;&nbsp;&nbsp;
-  <img src="tests/cases/state-basic/golden.png" height="230" alt="state machine" />
+  <img src="tests/cases/state-basic/golden.png" height="210" alt="state machine" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="tests/cases/class-basic/golden.png" height="210" alt="class diagram" />
 </p>
 
-<p align="center"><sub>Both rendered by the tool — laid out in CSS, no coordinates.</sub></p>
+<p align="center"><sub>All rendered by the tool — laid out in CSS, no coordinates.</sub></p>
 
 ## Why
 
@@ -47,8 +49,8 @@ Then describe the diagram — _"draw a login sequence: Alice → auth service �
 | ----------- | ------- |
 | Sequence    | ✅      |
 | State / FSM | ✅      |
+| Class       | ✅      |
 | Deployment  | planned |
-| Class       | planned |
 
 Everything is boxes + arrows under the hood; a "type" is just a layout convention and a few CSS styles on top of one engine.
 

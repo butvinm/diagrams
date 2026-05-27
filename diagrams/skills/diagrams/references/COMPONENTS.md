@@ -8,6 +8,7 @@ This file is the **core** — the components used in every diagram. For a specif
 
 - [`SEQUENCE.md`](SEQUENCE.md) — sequence diagrams.
 - [`STATE.md`](STATE.md) — state machines / FSM.
+- [`CLASS.md`](CLASS.md) — UML class diagrams.
 
 ## `<diagram>`
 
@@ -25,6 +26,7 @@ A box is **any HTML element** you place inside the `<diagram>` and give an `id` 
 - `.state` — a rounded labelled box (a state-machine state).
 - `.initial` — a small filled dot (initial pseudo-state).
 - `.final` — a ringed dot / bullseye (final pseudo-state).
+- `.class` — a multi-compartment UML class box (`.class-name` + `.class-section` rows; see `CLASS.md`).
 - `<lifeline col="...">` — a participant header in a `sequence` diagram.
 
 ```html
@@ -43,16 +45,16 @@ Then connect any two boxes by `id`: `<arrow from="idle" to="db">query</arrow>`.
 
 Its attributes:
 
-| Attribute   | Values                                          | Default         | Meaning                                                                    |
-| ----------- | ----------------------------------------------- | --------------- | -------------------------------------------------------------------------- |
-| `from`      | element id                                      | —               | source element                                                             |
-| `to`        | element id                                      | —               | target element                                                             |
-| `anchor`    | `"<src> <dst>"`                                 | `center center` | edge points to connect (see below)                                         |
-| `path`      | `straight`, `spline`                            | `straight`      | line shape (`spline` = bowed Bézier)                                       |
-| `curvature` | number                                          | `0.18`          | spline bow as a fraction of chord length; sign of bow flips with direction |
-| `head`      | `triangle`, `open`, `diamond`, `filled`, `none` | `triangle`      | arrowhead at `to` end                                                      |
-| `tail`      | same as `head`                                  | `none`          | marker at `from` end                                                       |
-| `line`      | `solid`, `dashed`, `dotted`                     | `solid`         | stroke style                                                               |
+| Attribute   | Values                                                    | Default         | Meaning                                                                      |
+| ----------- | --------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------- |
+| `from`      | element id                                                | —               | source element                                                               |
+| `to`        | element id                                                | —               | target element                                                               |
+| `anchor`    | `"<src> <dst>"`                                           | `center center` | edge points to connect (see below)                                           |
+| `path`      | `straight`, `spline`                                      | `straight`      | line shape (`spline` = bowed Bézier)                                         |
+| `curvature` | number                                                    | `0.18`          | spline bow as a fraction of chord length; sign of bow flips with direction   |
+| `head`      | `triangle`, `hollow`, `open`, `diamond`, `filled`, `none` | `triangle`      | arrowhead at `to` end (`hollow` = unfilled triangle, for UML generalization) |
+| `tail`      | same as `head`                                            | `none`          | marker at `from` end                                                         |
+| `line`      | `solid`, `dashed`, `dotted`                               | `solid`         | stroke style                                                                 |
 
 **Anchor names:** `top`, `bottom`, `left`, `right`, `center`, `top-left`, `top-right`, `bottom-left`, `bottom-right`. Space-separated: first token is the source edge, second is the target edge. A single token applies to both ends.
 
@@ -60,6 +62,6 @@ Its attributes:
 
 **Label content** is the arrow's children — plain text or arbitrary HTML (`<div class="badge">…</div>`, icons, multi-line). It is positioned just above the connector midpoint.
 
-**UML edge cheatsheet:** inheritance = `head="triangle"`; dependency = `head="open" line="dashed"`; aggregation = `head="diamond"`; composition = `head="filled"`.
+**UML edge cheatsheet:** generalization (inheritance) = `head="hollow"`; realization = `head="hollow" line="dashed"`; dependency = `head="open" line="dashed"`; aggregation = `head="diamond"`; composition = `head="filled"`. (`head="triangle"` is the _filled_ triangle used for sequence messages.) For class boxes and these relationships in context, see [`CLASS.md`](CLASS.md).
 
 > Avoid `-->` inside HTML comments — it closes the comment early and leaks text into the diagram.

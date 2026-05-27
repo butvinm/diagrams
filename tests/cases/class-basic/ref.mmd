@@ -1,0 +1,29 @@
+classDiagram
+    class Drawable {
+        <<interface>>
+        +draw() void
+    }
+    class Shape {
+        <<abstract>>
+        #int x
+        #int y
+        +move(dx, dy) void
+        +draw() void
+    }
+    class Canvas {
+        -List shapes
+        +add(s Shape) void
+    }
+    class Circle {
+        +float radius
+        +area() float
+    }
+    class Rectangle {
+        +float w
+        +float h
+        +area() float
+    }
+    Drawable <|.. Shape
+    Shape <|-- Circle
+    Shape <|-- Rectangle
+    Canvas *-- Shape : shapes

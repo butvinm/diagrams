@@ -15,7 +15,7 @@ The browser is the layout engine — which is why this is **Node, not Python** (
 - `diagrams/` — the shippable plugin (kit, render, skills, command, manifest)
 - `diagrams/kit/{primitives.css,kit.mjs}` — components & styles + connector engine
 - `diagrams/render/render.mjs` — html → png CLI
-- `diagrams/skills/diagrams/references/COMPONENTS.md` — the components, attributes, and styles; **read before authoring or extending diagram types**
+- `diagrams/skills/diagrams/references/COMPONENTS.md` — the components, attributes, and styles (core), with one file per type (`SEQUENCE.md`, `STATE.md`, `CLASS.md`); **read before authoring or extending diagram types**
 - `.claude/skills/dev/SKILL.md` — **dev workflow; read before changing the framework or touching goldens**
 - `tests/` — self-contained cases: `cases/<name>/{INTENT.md, ours.html, golden.png, ref.mmd?}` (golden committed; `ours/ref/diff.png` regenerated + gitignored) and `run.mjs`
 - `README.md` + `docs/` — human docs: lean landing page, then `docs/GUIDE.md` (authoring) and `docs/DEVELOPMENT.md` (harness/tests). Keep these in sync with the plugin's `COMPONENTS.md` and dev skill, which are authoritative.
@@ -47,8 +47,8 @@ The browser is the layout engine — which is why this is **Node, not Python** (
 
 ## Status
 
-Implemented: **`sequence`** and **state/FSM** (generic `stack` layout + `.state`/`.initial`/`.final` components). Engine supports `straight`/`spline` paths, named + fractional edge anchors, and a `curvature` knob. Mermaid references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium) and appear in the comparison gallery; cases carry an optional `ref.mmd`.
+Implemented: **`sequence`**, **state/FSM** (generic `stack` layout + `.state`/`.initial`/`.final` components), and **`class`** (multi-compartment `.class` boxes on your own CSS grid; `head="hollow"` for UML generalization). Engine supports `straight`/`spline` paths, named + fractional edge anchors, and a `curvature` knob. Markers: `triangle`/`hollow`/`open`/`diamond`/`filled`. Mermaid references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium) and appear in the comparison gallery; cases carry an optional `ref.mmd`.
 
 Distribution: `render/render.mjs` self-bootstraps — if `playwright` is missing it `npm install`s into `${CLAUDE_PLUGIN_ROOT}` (plugin has its own `diagrams/package.json`) on first use, and launches Playwright's Chromium or falls back to system Chrome/Edge. Verified from a clean copy with no `node_modules` and no browser download. `node_modules/` is gitignored, so the marketplace clone ships clean.
 
-TODO: deployment and class diagram types.
+TODO: deployment diagram type.

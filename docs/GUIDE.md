@@ -31,6 +31,8 @@ A diagram is one `<diagram>` holding boxes (any HTML, given an `id`) connected b
 
 You stay in control because the output is plain, tweakable markup. Move a box by changing its CSS, separate two arrows with different fractional anchors, fatten a curve with `curvature` — then re-render. Nothing is auto-placed, so the result is exactly what you wrote.
 
+Every diagram type is the same boxes-and-arrows underneath; a type just adds a layout convention and a few ready-made box styles. Sequence diagrams use a grid preset, state machines a centered `stack`, and class diagrams use `.class` boxes you place on your own CSS grid (with a `hollow` arrowhead for UML generalization). Pick the matching type reference below.
+
 ## Reference
 
-Every component, attribute, and style: [`COMPONENTS.md`](../diagrams/skills/diagrams/references/COMPONENTS.md).
+The core components, attributes, and styles: [`COMPONENTS.md`](../diagrams/skills/diagrams/references/COMPONENTS.md). Then the per-type files — [`SEQUENCE.md`](../diagrams/skills/diagrams/references/SEQUENCE.md), [`STATE.md`](../diagrams/skills/diagrams/references/STATE.md), [`CLASS.md`](../diagrams/skills/diagrams/references/CLASS.md).

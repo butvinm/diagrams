@@ -120,3 +120,51 @@ diagram.stack {
   border-radius: 50%;
   background: var(--dg-ink);
 }
+
+/* ---- class diagram ---- */
+
+/* A class box: a vertical stack of compartments sized to its content. */
+.class {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: max-content;
+  min-width: 120px;
+  border: 1.5px solid var(--dg-box-border);
+  border-radius: 4px;
+  background: var(--dg-box-bg);
+  overflow: hidden;
+}
+
+/* Name compartment: bold, centered, divider below. */
+.class-name {
+  padding: 7px 16px;
+  border-bottom: 1px solid var(--dg-box-border);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* A compartment of member rows (attributes, methods, …); each child is a row. */
+.class-section {
+  padding: 6px 12px;
+  font-family: var(--dg-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+/* Dividers between successive compartments. */
+.class-section + .class-section {
+  border-top: 1px solid var(--dg-box-border);
+}
+
+/* Stereotype line inside a name compartment, e.g. «interface». */
+.class .stereotype {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+/* Member/name modifiers: abstract = italic, static = underline. */
+.class .abstract { font-style: italic; }
+.class .static { text-decoration: underline; }
