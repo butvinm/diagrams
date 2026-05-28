@@ -4,7 +4,8 @@ Our rendering of Mermaid's autonumber sequence demo. The `ref.mmd` is copied
 verbatim from the Mermaid repo (`demos/sequence.html`, the `autonumber` example)
 at tag `mermaid@11.15.0`. Layout is ours; only the semantics must match.
 
-Two participants, **Alice** and **John**, each with a dashed lifeline. Four
+Two participants, **Alice** and **John**, each with a dashed lifeline and labelled
+at **both ends** (a footer box at the bottom). Four
 messages, each with a **two-line** label, top to bottom:
 
 1. Alice → John: `Hello John,` / `how are you?` — solid line, filled triangle head.

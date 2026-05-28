@@ -142,16 +142,113 @@ function applySequenceLayout(diagram) {
   const parts = (diagram.getAttribute("participants") || "")
     .split(",").map((s) => s.trim()).filter(Boolean);
   const col = Object.fromEntries(parts.map((p, i) => [p, i + 1]));
+  const ci = (name) => col[name] ?? 1;
   diagram.style.gridTemplateColumns = `repeat(${parts.length}, minmax(120px, 1fr))`;
 
+  // Grid coordinates: column = participant index (1-based), row = time step.
+  // Grid row 1 is the lifeline header, so message row R lives in grid row R+1.
   diagram.querySelectorAll("lifeline").forEach((l) => {
-    l.style.gridColumn = col[l.getAttribute("col")] ?? 1;
+    l.style.gridColumn = ci(l.getAttribute("col"));
     l.style.gridRow = 1;
   });
   diagram.querySelectorAll("point").forEach((p) => {
     const r = parseInt(p.getAttribute("row") || "1", 10);
-    p.style.gridColumn = col[p.getAttribute("col")] ?? 1;
-    p.style.gridRow = r + 1; // row 1 is the lifeline header
+    p.style.gridColumn = ci(p.getAttribute("col"));
+    p.style.gridRow = r + 1;
+  });
+
+  // Activation bar: a box on one lifeline spanning message rows [from, to].
+  diagram.querySelectorAll("activation").forEach((a) => {
+    const from = parseInt(a.getAttribute("from") || "1", 10);
+    const to = parseInt(a.getAttribute("to") || String(from), 10);
+    a.style.gridColumn = ci(a.getAttribute("col"));
+    a.style.gridRow = `${from + 1} / ${to + 2}`;
+  });
+
+  // Combined fragment: a labelled frame spanning columns [a, b] (the leftmost
+  // and rightmost participants it covers) and message rows [s, e]. The operator
+  // (alt/opt/loop/ref/par/…) is shown in a corner tab.
+  diagram.querySelectorAll("fragment").forEach((f) => {
+    const [a, b] = (f.getAttribute("col") || "").trim().split(/\s+/);
+    const [s, e] = (f.getAttribute("row") || "").trim().split(/\s+/).map((n) => parseInt(n, 10));
+    f.style.gridColumn = `${ci(a)} / ${ci(b) + 1}`;
+    f.style.gridRow = `${s + 1} / ${e + 2}`;
+    const op = f.getAttribute("op");
+    if (op && !f.querySelector(":scope > .dg-op")) {
+      const tab = document.createElement("span");
+      tab.className = "dg-op";
+      tab.textContent = op;
+      f.insertBefore(tab, f.firstChild);
+    }
+  });
+
+  // Guard: an operand label inside a fragment, spanning columns [a, b] at one
+  // row. `sep` draws the dashed operand divider (every operand but the first).
+  // Its content is wrapped so the label gets a white knockout over the lifelines.
+  diagram.querySelectorAll("guard").forEach((g) => {
+    const [a, b] = (g.getAttribute("col") || "").trim().split(/\s+/);
+    const r = parseInt(g.getAttribute("row") || "1", 10);
+    g.style.gridColumn = `${ci(a)} / ${ci(b) + 1}`;
+    g.style.gridRow = r + 1;
+    if (g.childNodes.length && !g.querySelector(":scope > .dg-guard-label")) {
+      const label = document.createElement("span");
+      label.className = "dg-guard-label";
+      while (g.firstChild) label.appendChild(g.firstChild);
+      g.appendChild(label);
+    }
+  });
+
+  // Section divider: a full-width band with a centered label chip at one row.
+  diagram.querySelectorAll("divider").forEach((d) => {
+    const r = parseInt(d.getAttribute("row") || "1", 10);
+    d.style.gridColumn = "1 / -1";
+    d.style.gridRow = r + 1;
+    if (d.childNodes.length && !d.querySelector(":scope > .dg-divider-label")) {
+      const label = document.createElement("span");
+      label.className = "dg-divider-label";
+      while (d.firstChild) label.appendChild(d.firstChild);
+      d.appendChild(label);
+    }
+  });
+
+  // Footer participants: clone each header lifeline to a row below the last
+  // message, so participants are labelled at both ends (as Mermaid/PlantUML do).
+  if (!diagram.querySelector("lifeline.dg-foot")) {
+    let maxRow = 1;
+    const bump = (v) => { if (Number.isFinite(v)) maxRow = Math.max(maxRow, v); };
+    diagram.querySelectorAll("point").forEach((p) => bump(parseInt(p.getAttribute("row"), 10)));
+    diagram.querySelectorAll("activation").forEach((a) => bump(parseInt(a.getAttribute("to") || a.getAttribute("from"), 10)));
+    diagram.querySelectorAll("fragment").forEach((f) => bump(parseInt((f.getAttribute("row") || "").trim().split(/\s+/)[1], 10)));
+    diagram.querySelectorAll("divider").forEach((d) => bump(parseInt(d.getAttribute("row"), 10)));
+    const footRow = maxRow + 2;
+    diagram.querySelectorAll("lifeline:not(.dg-foot)").forEach((l) => {
+      const foot = l.cloneNode(true);
+      foot.classList.add("dg-foot");
+      foot.style.gridColumn = ci(l.getAttribute("col"));
+      foot.style.gridRow = footRow;
+      diagram.appendChild(foot);
+    });
+  }
+}
+
+// Combined fragments and their guards span columns by whole grid cells, which
+// leaves half a column of slack past the outer lifelines. After layout, pull
+// each one in so it hugs the involved lifelines (centers ± a small margin).
+function hugFragments(diagram) {
+  const M = 10;
+  const center = {};
+  diagram.querySelectorAll("lifeline:not(.dg-foot)").forEach((l) => {
+    const r = l.getBoundingClientRect();
+    center[l.getAttribute("col")] = r.left + r.width / 2;
+  });
+  diagram.querySelectorAll("fragment, guard").forEach((el) => {
+    const cols = (el.getAttribute("col") || "").trim().split(/\s+/);
+    const xa = center[cols[0]];
+    const xb = center[cols[cols.length - 1]];
+    if (xa == null || xb == null) return;
+    const r = el.getBoundingClientRect();
+    el.style.marginLeft = `${xa - r.left - M}px`;
+    el.style.marginRight = `${r.right - xb - M}px`;
   });
 }
 
@@ -162,15 +259,47 @@ function drawOverlay(diagram) {
   defineMarkers(defs);
   svg.appendChild(defs);
 
-  // Lifelines: dashed verticals from below each header to the diagram bottom.
-  diagram.querySelectorAll("lifeline").forEach((l) => {
+  // Lifelines: dashed verticals from below each header down to the footer
+  // participant (or the diagram bottom if there is none). Footer clones don't
+  // emit a lifeline of their own.
+  const feet = {};
+  diagram.querySelectorAll("lifeline.dg-foot").forEach((f) => { feet[f.getAttribute("col")] = boxIn(f, origin); });
+  diagram.querySelectorAll("lifeline:not(.dg-foot)").forEach((l) => {
     const b = boxIn(l, origin);
     const x = b.x + b.w / 2;
+    const foot = feet[l.getAttribute("col")];
     svg.appendChild(el("line", {
-      x1: x, y1: b.y + b.h, x2: x, y2: origin.height - 8,
+      x1: x, y1: b.y + b.h, x2: x, y2: foot ? foot.y : origin.height - 8,
       stroke: "var(--dg-line)", "stroke-width": 1.2, "stroke-dasharray": "4 4", opacity: 0.6,
     }));
   });
+
+  // Activation bars, measured. An arrow endpoint that lands on an active
+  // participant snaps to the bar's edge (the side the arrow approaches from), so
+  // the arrowhead abuts the bar instead of overlapping its center — as
+  // Mermaid/PlantUML draw it. With nested bars (one offset over another), snap to
+  // the OUTERMOST edge among the bars covering the point, so the head abuts the
+  // outer boundary and never pokes into a bar behind it.
+  const acts = [];
+  diagram.querySelectorAll("activation").forEach((a) => {
+    const r = boxIn(a, origin);
+    acts.push({
+      col: a.getAttribute("col"),
+      from: parseInt(a.getAttribute("from") || "1", 10),
+      to: parseInt(a.getAttribute("to") || a.getAttribute("from") || "1", 10),
+      left: r.x, right: r.x + r.w,
+    });
+  });
+  const snapToBar = (pointEl, x, otherX) => {
+    if (!acts.length || !pointEl) return x;
+    const col = pointEl.getAttribute("col");
+    const row = parseInt(pointEl.getAttribute("row") || "1", 10);
+    const covering = acts.filter((b) => b.col === col && b.from <= row && row <= b.to);
+    if (!covering.length) return x;
+    return otherX < x
+      ? Math.min(...covering.map((b) => b.left))
+      : Math.max(...covering.map((b) => b.right));
+  };
 
   // Connectors.
   diagram.querySelectorAll("arrow").forEach((a) => {
@@ -181,8 +310,10 @@ function drawOverlay(diagram) {
       return;
     }
     const [sa, ta] = parseAnchor(a.getAttribute("anchor"));
-    const p1 = anchorPoint(boxIn(from, origin), sa);
-    const p2 = anchorPoint(boxIn(to, origin), ta);
+    const a1 = anchorPoint(boxIn(from, origin), sa);
+    const a2 = anchorPoint(boxIn(to, origin), ta);
+    const p1 = [snapToBar(from, a1[0], a2[0]), a1[1]];
+    const p2 = [snapToBar(to, a2[0], a1[0]), a2[1]];
     const shape = a.getAttribute("path") || "straight";
     const k = parseFloat(a.getAttribute("curvature"));
     const geom = connectorGeometry(p1, p2, shape, Number.isFinite(k) ? k : 0.18);
@@ -219,7 +350,11 @@ async function render() {
   diagrams.forEach((d) => {
     if (d.classList.contains("sequence")) applySequenceLayout(d);
   });
-  // Force layout to settle before measuring, then draw.
+  // Settle the grid, hug fragments to their lifelines, settle again, then draw.
+  void document.body.offsetHeight;
+  diagrams.forEach((d) => {
+    if (d.classList.contains("sequence")) hugFragments(d);
+  });
   void document.body.offsetHeight;
   diagrams.forEach(drawOverlay);
   document.documentElement.dataset.dgReady = "true";

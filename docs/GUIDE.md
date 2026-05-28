@@ -31,7 +31,7 @@ A diagram is one `<diagram>` holding boxes (any HTML, given an `id`) connected b
 
 You stay in control because the output is plain, tweakable markup. Move a box by changing its CSS, separate two arrows with different fractional anchors, fatten a curve with `curvature` — then re-render. Nothing is auto-placed, so the result is exactly what you wrote.
 
-Every diagram type is the same boxes-and-arrows underneath; a type just adds a layout convention and a few ready-made box styles. Sequence diagrams use a grid preset, state machines a centered `stack`, class diagrams use `.class` boxes (with a `hollow` arrowhead for UML generalization), and deployment diagrams use `.node` containers holding nested `.artifact` boxes — both placed on your own CSS layout. Data flow diagrams add `.external` / `.process` / `.store` elements, plus `.zone` and `.boundary` for the threat-model flavor (trust zones and boundary lines). Pick the matching type reference below.
+Every diagram type is the same boxes-and-arrows underneath; a type just adds a layout convention and a few ready-made box styles. Sequence diagrams use a grid preset (with `<activation>` bars, `<fragment>`/`<guard>` combined fragments like `alt`/`opt`/`loop`, and `<divider>` section bands), state machines a centered `stack`, class diagrams use `.class` boxes (with a `hollow` arrowhead for UML generalization), and deployment diagrams use `.node` containers holding nested `.artifact` boxes — both placed on your own CSS layout. Data flow diagrams add `.external` / `.process` / `.store` elements, plus `.zone` and `.boundary` for the threat-model flavor (trust zones and boundary lines). Pick the matching type reference below.
 
 ## Reference
 

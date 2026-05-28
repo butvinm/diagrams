@@ -6,7 +6,7 @@ These are **plain HTML elements** (not custom elements) processed by the kit aft
 
 This file is the **core** — the components used in every diagram. For a specific diagram type, read its reference alongside this one:
 
-- [`SEQUENCE.md`](SEQUENCE.md) — sequence diagrams.
+- [`SEQUENCE.md`](SEQUENCE.md) — sequence diagrams (lifelines & messages, plus `<activation>` bars, `<fragment>`/`<guard>` combined fragments, and `<divider>` section bands).
 - [`STATE.md`](STATE.md) — state machines / FSM.
 - [`CLASS.md`](CLASS.md) — UML class diagrams.
 - [`DEPLOYMENT.md`](DEPLOYMENT.md) — UML deployment diagrams.
