@@ -23,19 +23,19 @@ Then describe the diagram — _"draw a login sequence: Alice → auth service �
 
 **Sequence** · [source](tests/cases/sequence-basic/ours.html)
 
-![sequence diagram](tests/cases/sequence-basic/golden.png)
+<img src="tests/cases/sequence-basic/golden.png" height="360" alt="sequence diagram" />
 
 **State / FSM** · [source](tests/cases/state-basic/ours.html)
 
-![state machine](tests/cases/state-basic/golden.png)
+<img src="tests/cases/state-basic/golden.png" height="360" alt="state machine" />
 
 **Class** · [source](tests/cases/class-basic/ours.html)
 
-![class diagram](tests/cases/class-basic/golden.png)
+<img src="tests/cases/class-basic/golden.png" height="360" alt="class diagram" />
 
 **Deployment** · [source](tests/cases/deployment-basic/ours.html)
 
-![deployment diagram](tests/cases/deployment-basic/golden.png)
+<img src="tests/cases/deployment-basic/golden.png" height="360" alt="deployment diagram" />
 
 ## Documentation
 
