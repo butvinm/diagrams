@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>sequence-alt</title>
+
+<diagram class="sequence" participants="alice,bob" style="width: 600px">
+  <lifeline col="alice">Alice</lifeline>
+  <lifeline col="bob">Bob</lifeline>
+
+  <!-- 1. Alice to Bob -->
+  <point id="m1a" col="alice" row="1"></point>
+  <point id="m1b" col="bob"   row="1"></point>
+  <arrow from="m1a" to="m1b" head="triangle">Hello Bob, how are you?</arrow>
+
+  <!-- alt: is sick / is well -->
+  <fragment op="alt" col="alice bob" row="2 5"></fragment>
+  <guard col="alice bob" row="2">[is sick]</guard>
+
+  <point id="m2a" col="bob"   row="3"></point>
+  <point id="m2b" col="alice" row="3"></point>
+  <arrow from="m2a" to="m2b" head="triangle">Not so good :(</arrow>
+
+  <guard col="alice bob" row="4" sep>[is well]</guard>
+
+  <point id="m3a" col="bob"   row="5"></point>
+  <point id="m3b" col="alice" row="5"></point>
+  <arrow from="m3a" to="m3b" head="triangle">Feeling fresh like a daisy</arrow>
+
+  <!-- opt: Extra response -->
+  <fragment op="opt" col="alice bob" row="7 8"></fragment>
+  <guard col="alice bob" row="7">[Extra response]</guard>
+
+  <point id="m4a" col="bob"   row="8"></point>
+  <point id="m4b" col="alice" row="8"></point>
+  <arrow from="m4a" to="m4b" head="triangle">Thanks for asking</arrow>
+</diagram>

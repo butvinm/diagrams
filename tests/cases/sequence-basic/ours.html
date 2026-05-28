@@ -2,7 +2,7 @@
 <meta charset="utf-8" />
 <title>sequence-basic</title>
 
-<diagram class="sequence" participants="alice,john" style="width: 680px">
+<diagram class="sequence" participants="alice,john" style="width: 820px">
   <lifeline col="alice">Alice</lifeline>
   <lifeline col="john">John</lifeline>
 
@@ -20,4 +20,19 @@
   <point id="m3a" col="alice" row="3"></point>
   <point id="m3b" col="john"  row="3"></point>
   <arrow from="m3a" to="m3b" head="open">See you later!</arrow>
+
+  <!-- 4. bidirectional -->
+  <point id="m4a" col="alice" row="4"></point>
+  <point id="m4b" col="john"  row="4"></point>
+  <arrow from="m4a" to="m4b" tail="open" head="open">Hello!</arrow>
+
+  <!-- 5. bidirectional -->
+  <point id="m5a" col="alice" row="5"></point>
+  <point id="m5b" col="john"  row="5"></point>
+  <arrow from="m5a" to="m5b" tail="open" head="open">Wow, we said that at the same time!</arrow>
+
+  <!-- 6. bidirectional, dashed -->
+  <point id="m6a" col="alice" row="6"></point>
+  <point id="m6b" col="john"  row="6"></point>
+  <arrow from="m6a" to="m6b" tail="open" head="open" line="dashed">Bidirectional Arrows are so cool</arrow>
 </diagram>

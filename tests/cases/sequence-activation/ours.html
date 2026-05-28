@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>sequence-activation</title>
+
+<diagram class="sequence" participants="alice,john" style="width: 620px">
+  <lifeline col="alice">Alice</lifeline>
+  <lifeline col="john">John</lifeline>
+
+  <!-- John is activated twice (nested): outer over all four messages, inner
+       over the second call/return; the inner bar is nudged right. -->
+  <activation col="john" from="1" to="4"></activation>
+  <activation col="john" from="2" to="3" style="margin-left: 7px"></activation>
+
+  <!-- 1. Alice to John (activate) -->
+  <point id="m1a" col="alice" row="1"></point>
+  <point id="m1b" col="john"  row="1"></point>
+  <arrow from="m1a" to="m1b" head="triangle">Hello John, how are you?</arrow>
+
+  <!-- 2. Alice to John (nested activate) -->
+  <point id="m2a" col="alice" row="2"></point>
+  <point id="m2b" col="john"  row="2"></point>
+  <arrow from="m2a" to="m2b" head="triangle">John, can you hear me?</arrow>
+
+  <!-- 3. John to Alice (return, deactivate inner) -->
+  <point id="m3a" col="john"  row="3"></point>
+  <point id="m3b" col="alice" row="3"></point>
+  <arrow from="m3a" to="m3b" head="triangle" line="dashed">Hi Alice, I can hear you!</arrow>
+
+  <!-- 4. John to Alice (return, deactivate outer) -->
+  <point id="m4a" col="john"  row="4"></point>
+  <point id="m4b" col="alice" row="4"></point>
+  <arrow from="m4a" to="m4b" head="triangle" line="dashed">I feel great!</arrow>
+</diagram>

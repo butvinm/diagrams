@@ -3,9 +3,11 @@
 ## Mermaid (test fixtures)
 
 The `tests/cases/*/ref.mmd` files are example diagram _sources_ taken from the
-Mermaid project — primarily its [`demos/`](https://github.com/mermaid-js/mermaid/tree/develop/demos)
-examples — used as references for visual comparison only (rendered by
-`tests/lib/render-mermaid.mjs`). Mermaid is distributed under the MIT License.
+Mermaid project — its [`demos/`](https://github.com/mermaid-js/mermaid/tree/develop/demos)
+examples and its [docs](https://mermaid.js.org/syntax/sequenceDiagram.html) (e.g.
+the sequence-diagram activation and `alt`/`opt` examples) — used as references for
+visual comparison only (rendered by `tests/lib/render-mermaid.mjs`). Mermaid is
+distributed under the MIT License.
 
 > MIT License
 >

@@ -54,6 +54,9 @@ lifeline {
   font-weight: 600;
   white-space: nowrap;
 }
+/* Footer participant (cloned to the bottom by the kit): a small gap clears the
+ * last message or fragment above it. */
+lifeline.dg-foot { margin-top: 14px; }
 
 /* A zero-size anchor sitting at the center of its grid cell. */
 point {
@@ -74,6 +77,97 @@ arrow {
   padding: 0 5px;
 }
 arrow:empty { display: none; }
+
+/* Activation bar: a thin box on a lifeline marking when a participant is active.
+ * Opaque, so it covers the dashed lifeline; arrows (z-index 2) draw over it.
+ * The 28px top/bottom margins are half a grid row (grid-auto-rows: 56px), so the
+ * bar begins and ends exactly on the activating/deactivating message instead of
+ * filling the whole cell. */
+activation {
+  z-index: 1;
+  justify-self: center;
+  align-self: stretch;
+  width: 10px;
+  margin-top: 28px;
+  margin-bottom: 28px;
+  border: 1.5px solid var(--dg-box-border);
+  background: var(--dg-box-bg);
+}
+
+/* Combined fragment: a labelled frame (alt/opt/loop/ref/par/…) around a group of
+ * messages. Transparent body so the messages inside show; the border is the box. */
+fragment {
+  position: relative;
+  z-index: 1;
+  align-self: stretch;
+  justify-self: stretch;
+  border: 1.4px solid var(--dg-box-border);
+  pointer-events: none;
+}
+/* Operator tab in the top-left corner. */
+.dg-op {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 2px 10px 4px;
+  background: var(--dg-box-bg);
+  border-right: 1.4px solid var(--dg-box-border);
+  border-bottom: 1.4px solid var(--dg-box-border);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* Guard: an operand label inside a fragment; `sep` adds the dashed operand
+ * divider that separates one operand from the next. */
+guard {
+  position: relative;
+  z-index: 1;
+  align-self: start;
+  justify-self: stretch;
+}
+guard[sep] {
+  border-top: 1.4px dashed var(--dg-box-border);
+}
+.dg-guard-label {
+  display: inline-block;
+  margin: 3px 0 0 8px;
+  padding: 1px 6px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+/* The first operand sits beside the operator tab, so clear its width. */
+guard:not([sep]) > .dg-guard-label { margin-left: 52px; }
+
+/* Section divider: a full-width rule with a centered label chip. */
+divider {
+  z-index: 1;
+  justify-self: stretch;
+  align-self: center;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 2px solid var(--dg-box-border);
+}
+.dg-divider-label {
+  position: relative;
+  padding: 4px 16px;
+  border: 1.5px solid var(--dg-box-border);
+  border-radius: 3px;
+  background: var(--dg-box-bg);
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+}
 
 /* ---- generic layouts (any diagram without a preset) ---- */
 
