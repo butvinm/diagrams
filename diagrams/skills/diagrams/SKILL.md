@@ -26,3 +26,4 @@ The reference lives in `references/`: read `COMPONENTS.md` for the core (boxes, 
 - Verbosity is fine — you (the assistant) write the markup. Favor explicit, regular structure over clever shorthand.
 - One connector = a pure function of its two anchor points and its path style. There is no obstacle avoidance; if a line crosses something, move a box or pick different anchors.
 - Rich label content (icons, badges, multi-line) is just HTML/CSS inside the `<arrow>` element.
+- Math: write LaTeX in any label or box — `\(`…`\)` inline, `\[`…`\]` / `$$`…`$$` display — and KaTeX (vendored, offline) typesets it. A lone `$` is not a delimiter. See the Math section of `references/COMPONENTS.md`.

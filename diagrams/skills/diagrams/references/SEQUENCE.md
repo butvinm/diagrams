@@ -15,6 +15,7 @@ A **sequence diagram** (a UML interaction diagram) shows how participants exchan
 - **Combined fragments** (`<fragment>` + `<guard>`): `alt`, `opt`, `loop`, `ref`, `par`, or any operator label, with multiple operands and dashed separators.
 - **Section dividers** (`<divider>`) to split a long run into phases.
 - **Step numbers**: written into the message label yourself (there is no auto-numbering).
+- **Math labels** (LaTeX via KaTeX) in messages and dividers — see the Math section in [`COMPONENTS.md`](COMPONENTS.md); worked example in `tests/cases/sequence-math`.
 
 **Not built-in:** lifeline create/destroy markers, gates, and interaction-occurrence boxes have no dedicated component — approximate them with the existing primitives if you need them.
 
@@ -100,5 +101,9 @@ A `<divider row>` is a full-width band with a centered label chip, used to split
 ```
 
 For all three in one diagram — activations, an `alt` fragment, dividers, and self-calls — see `tests/cases/sequence-protocol` (a render-verified golden translated from a PlantUML protocol diagram).
+
+## Math in labels
+
+Message and divider labels can carry LaTeX math (inline `\(`…`\)`, display `\[`…`\]` / `$$`…`$$`), typeset by KaTeX. `tests/cases/sequence-math` is a Diffie–Hellman exchange whose messages read `\(A = g^{a} \bmod p\)` and whose closing divider shows the display equation `\[ s = A^{b} = B^{a} = g^{ab} \bmod p \]`. The math delimiters and behavior are documented once, for every diagram type, in [`COMPONENTS.md`](COMPONENTS.md).
 
 > Avoid `-->` inside HTML comments — it closes the comment early and leaks text into the diagram.

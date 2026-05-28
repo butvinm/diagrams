@@ -1,0 +1,24 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>sequence-math</title>
+
+<diagram class="sequence" participants="alice,bob" style="width: 820px">
+  <lifeline col="alice">Alice</lifeline>
+  <lifeline col="bob">Bob</lifeline>
+
+  <!-- public parameters, inline math in a section band -->
+  <divider row="1">public: prime \(p\), generator \(g\)</divider>
+
+  <!-- Alice picks secret a, sends her public value -->
+  <point id="a1" col="alice" row="2"></point>
+  <point id="b1" col="bob" row="2"></point>
+  <arrow from="a1" to="b1" head="triangle">\(A = g^{a} \bmod p\)</arrow>
+
+  <!-- Bob picks secret b, replies with his public value -->
+  <point id="b2" col="bob" row="3"></point>
+  <point id="a2" col="alice" row="3"></point>
+  <arrow from="b2" to="a2" head="triangle" line="dashed">\(B = g^{b} \bmod p\)</arrow>
+
+  <!-- shared secret, display math -->
+  <divider row="4">shared secret \[ s = A^{b} = B^{a} = g^{ab} \bmod p \]</divider>
+</diagram>
