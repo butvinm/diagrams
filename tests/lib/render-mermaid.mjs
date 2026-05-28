@@ -15,7 +15,8 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const MERMAID = path.resolve(here, "../../node_modules/mermaid/dist/mermaid.min.js");
 
 export async function renderMermaid(code, outPath, { scale = 2 } = {}) {
-  const browser = await chromium.launch();
+  // DG_NO_SANDBOX=1 lets Chromium launch as root in a container (see render.mjs).
+  const browser = await chromium.launch({ args: process.env.DG_NO_SANDBOX ? ["--no-sandbox"] : [] });
   try {
     const page = await browser.newPage({ deviceScaleFactor: scale });
     await page.setContent('<!doctype html><body style="margin:0;padding:12px;background:#fff">', { waitUntil: "load" });

@@ -78,7 +78,10 @@ async function loadPlaywright() {
 
 // Launch the first browser that works: Playwright's Chromium, else system Chrome/Edge.
 async function launchBrowser(chromium) {
-  const attempts = [{}, { channel: "chrome" }, { channel: "msedge" }];
+  // Chromium's setuid sandbox can't run as root inside a container; opt out with DG_NO_SANDBOX=1 (set by the Docker test env).
+  // Off by default — the shipped renderer keeps the sandbox on a normal desktop.
+  const args = process.env.DG_NO_SANDBOX ? ["--no-sandbox"] : [];
+  const attempts = [{ args }, { channel: "chrome", args }, { channel: "msedge", args }];
   let lastErr;
   for (const opts of attempts) {
     try {
