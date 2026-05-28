@@ -253,6 +253,10 @@ function hugFragments(diagram) {
 }
 
 function drawOverlay(diagram) {
+  // Idempotent: drop any overlay from a previous pass so a redraw (e.g. on
+  // resize) replaces it rather than stacking a second SVG on top.
+  const prev = diagram.querySelector(":scope > .dg-overlay");
+  if (prev) prev.remove();
   const origin = diagram.getBoundingClientRect();
   const svg = el("svg", { class: "dg-overlay", width: origin.width, height: origin.height });
   const defs = el("defs");
@@ -363,6 +367,45 @@ function renderMath() {
   );
 }
 
+// --- Embedding / responsive support ---------------------------------------
+// These keep a *live* diagram correct in a browser (fluid embeds, window
+// resize, iframe auto-height). They are inert for the one-shot PNG renderer:
+// the redraw is idempotent, and postSize() no-ops on a top-level page.
+
+// Redraw every overlay from current geometry — no re-layout, no re-typeset.
+function redrawAll() {
+  document.querySelectorAll("diagram").forEach(drawOverlay);
+}
+
+// Re-measure anchors and redraw connectors when a diagram's box resizes,
+// coalesced to one redraw per animation frame so a drag tracks smoothly. A
+// connector stays a pure function of its anchors — this only re-runs that
+// function; it never routes.
+let _dgResizeRaf = 0;
+function armResponsive() {
+  if (typeof ResizeObserver !== "function") return;
+  const ro = new ResizeObserver(() => {
+    if (_dgResizeRaf) return;
+    _dgResizeRaf = requestAnimationFrame(() => {
+      _dgResizeRaf = 0;
+      redrawAll();
+      postSize();
+    });
+  });
+  document.querySelectorAll("diagram").forEach((d) => ro.observe(d));
+}
+
+// Tell a host page (iframe embed) our rendered size so it can self-fit. No-op
+// on a top-level page (the PNG renderer) or a cross-origin host.
+function postSize() {
+  const d = document.querySelector("diagram");
+  if (!d || typeof parent === "undefined" || parent === window) return;
+  const r = d.getBoundingClientRect();
+  try {
+    parent.postMessage({ dg: "size", w: Math.ceil(r.width), h: Math.ceil(r.height) }, "*");
+  } catch { /* cross-origin host: ignore */ }
+}
+
 async function render() {
   renderMath();
   await (document.fonts ? document.fonts.ready : Promise.resolve());
@@ -378,6 +421,8 @@ async function render() {
   void document.body.offsetHeight;
   diagrams.forEach(drawOverlay);
   document.documentElement.dataset.dgReady = "true";
+  armResponsive(); // keep connectors attached if the container later resizes
+  postSize();      // self-fit a host iframe (no-op when not embedded)
 }
 
 render().catch((e) => {
