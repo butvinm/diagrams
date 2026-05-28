@@ -344,7 +344,27 @@ function drawOverlay(diagram) {
   diagram.insertBefore(svg, diagram.firstChild);
 }
 
+// Typeset TeX in every diagram before anything is measured, so math-sized boxes
+// settle first. Uses KaTeX's auto-render if render.mjs injected it; a no-op
+// otherwise, so the kit still runs without KaTeX. Delimiters: \(…\) inline and
+// $$…$$ / \[…\] display — no single `$`, which would clash with plain text.
+function renderMath() {
+  const renderMathInElement = window.renderMathInElement;
+  if (typeof renderMathInElement !== "function") return;
+  document.querySelectorAll("diagram").forEach((d) =>
+    renderMathInElement(d, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\[", right: "\\]", display: true },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    }),
+  );
+}
+
 async function render() {
+  renderMath();
   await (document.fonts ? document.fonts.ready : Promise.resolve());
   const diagrams = document.querySelectorAll("diagram");
   diagrams.forEach((d) => {

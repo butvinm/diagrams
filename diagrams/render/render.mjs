@@ -23,6 +23,13 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const pluginRoot = path.resolve(here, ".."); // = ${CLAUDE_PLUGIN_ROOT}
 const KIT_CSS = path.join(pluginRoot, "kit", "primitives.css");
 const KIT_JS = path.join(pluginRoot, "kit", "kit.mjs");
+// Vendored KaTeX (offline): the CSS is injected via its file:// URL so the
+// @font-face url(fonts/…) resolve next to it; the runtime + auto-render are
+// plain globals the kit calls if present.
+const KATEX_DIR = path.join(pluginRoot, "kit", "vendor", "katex");
+const KATEX_CSS = path.join(KATEX_DIR, "katex.min.css");
+const KATEX_JS = path.join(KATEX_DIR, "katex.min.js");
+const KATEX_AUTORENDER = path.join(KATEX_DIR, "auto-render.min.js");
 
 const [input, output] = process.argv.slice(2);
 if (!input || !output) {
@@ -41,6 +48,11 @@ try {
   page.on("pageerror", (e) => console.error("  [page error]", e.message));
 
   await page.goto(pathToFileURL(path.resolve(input)).href, { waitUntil: "load" });
+  if (fs.existsSync(KATEX_CSS)) {
+    await page.addStyleTag({ url: pathToFileURL(KATEX_CSS).href });
+    await page.addScriptTag({ path: KATEX_JS });
+    await page.addScriptTag({ path: KATEX_AUTORENDER });
+  }
   await page.addStyleTag({ path: KIT_CSS });
   await page.addScriptTag({ path: KIT_JS, type: "module" });
 
