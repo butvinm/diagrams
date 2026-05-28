@@ -2,6 +2,20 @@
 
 Read [`COMPONENTS.md`](COMPONENTS.md) first for boxes, `<arrow>`, and anchors.
 
+## What it is
+
+A **deployment diagram** shows a system's **physical/runtime topology**: **nodes** (devices or execution environments — UML draws them as 3-D boxes, here flat titled boxes) host **artifacts** (deployable pieces such as a `.war`, a binary, a schema). Nodes connect via **communication paths** (plain undirected lines labelled with the protocol); an artifact's placement is shown either by **nesting** it inside a node or with an explicit `«deploy»` dependency. See the [UML reference](https://www.uml-diagrams.org/deployment-diagrams-overview.html). Layout is yours; the kit draws the paths.
+
+## Supported
+
+- **Nodes** (`.node`) with a titled name bar and an optional `«stereotype»` (`«device»`, `«executionEnvironment»`, …).
+- **Artifacts** (`.artifact`) nested in a node's `.node-body`.
+- **Nested nodes** — a node inside another node's body (see `deployment-nested`).
+- **Communication paths** (`head="none"`) labelled with a protocol, including several fanning out of one node (see `deployment-cluster`).
+- **Explicit `«deploy»` dependency** (`head="open" line="dashed"`) for an artifact drawn outside its node.
+
+**Not built-in:** there are no dedicated component/port shapes or node multiplicity markers — use boxes and labels.
+
 A deployment diagram has **no layout preset** — place the nodes yourself with your own CSS (a flex row or grid is usually enough), then connect them with `<arrow>`. A node is a ready-made container box that holds nested artifacts.
 
 > Unlike the other types, deployment diagrams have **no Mermaid equivalent** (Mermaid has no UML deployment diagram), so cases carry no `ref.mmd` and the comparison gallery shows `(none)` for the Mermaid column.

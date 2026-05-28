@@ -2,6 +2,19 @@
 
 Read [`COMPONENTS.md`](COMPONENTS.md) first for boxes, `<arrow>`, and anchors.
 
+## What it is
+
+A **state machine (FSM) diagram** models the lifecycle of a single object as a set of **states** and the **transitions** between them. Rules: execution starts at an _initial_ pseudo-state (filled dot), moves between named states along directed transitions whose **label is the triggering event/guard**, and may end at a _final_ state (ringed dot); at most one state is active at a time. See the [UML reference](https://www.uml-diagrams.org/state-machine-diagrams.html). Here states are boxes in a `stack` (or your own layout) and transitions are `<arrow>`s.
+
+## Supported
+
+- **States** (`.state`), the **initial** pseudo-state (`.initial`, a filled dot), and the **final** state (`.final`, a ringed bullseye).
+- **Transitions** as `<arrow>`s, with optional event/guard text as the label.
+- **Back-and-forth** pairs and **skip** transitions, separated with `spline` + fractional anchors so they bow apart instead of overlapping (there is no auto-routing).
+- Arbitrary shapes — chains, **fork/merge fans** — built from the `stack` preset plus your own CSS layout.
+
+**Not built-in:** composite/nested states, fork/join bars, and choice/junction/history pseudo-states have **no dedicated component** — compose them from boxes, dots, and arrows when needed.
+
 `class="stack"` is a ready-made vertical centered column (also handy for simple flows). State components: `.state` (rounded box), `.initial` (filled dot), `.final` (ringed bullseye).
 
 This is `tests/cases/state-basic/ours.html` — a render-verified golden (our rendering of a Mermaid `stateDiagram` demo).

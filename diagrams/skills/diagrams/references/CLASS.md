@@ -2,6 +2,20 @@
 
 Read [`COMPONENTS.md`](COMPONENTS.md) first for boxes, `<arrow>`, and anchors.
 
+## What it is
+
+A **class diagram** is UML's static-structure view: **classifiers** (classes, interfaces, abstract classes) and the **relationships** between them. A class is a box of up to three compartments — **name** (optionally a `«stereotype»`), **attributes**, **operations** — with members carrying a visibility marker (`+` public, `-` private, `#` protected, `~` package). Relationships are typed connectors: generalization, realization, association, dependency, aggregation, composition. See the [UML reference](https://www.uml-diagrams.org/class-diagrams-overview.html). Layout is yours (a CSS grid is easiest); the kit only draws the relationship lines.
+
+## Supported
+
+- **Class boxes** (`.class`): a name compartment plus any number of member compartments (`.class-section`).
+- **Stereotypes** (`.stereotype`, e.g. `«interface»` / `«abstract»`) and member **modifiers**: `.abstract` (italic), `.static` (underline).
+- **Visibility markers** typed into the member text (`+ - # ~`), aligned because rows are monospaced.
+- **All six UML relationships** via `<arrow>` head/line: generalization, realization, association, dependency, aggregation, composition (table below).
+- **Namespace / package grouping** drawn as your own labelled frame boxes around the classes (see the nested namespace frames in the `class-assoc` case).
+
+**Done by hand:** association **multiplicities** and **role names** are plain text you place near an end (`label-pos`), not a dedicated field.
+
 A class diagram has **no layout preset** — you place the boxes yourself with your own CSS (grid is usually easiest), then connect them with `<arrow>`. The class box is a ready-made multi-compartment component; the UML relationship lines are ordinary connectors.
 
 ## The class box

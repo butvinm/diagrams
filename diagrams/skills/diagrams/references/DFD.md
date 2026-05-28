@@ -8,6 +8,18 @@ DFDs have **no layout preset** — place the elements yourself with your own CSS
 
 > Like deployment diagrams, DFDs have **no Mermaid equivalent** (Mermaid has no DFD type), so cases carry no `ref.mmd` and the comparison gallery shows `(none)` for the Mermaid column.
 
+## Rules
+
+DFD (Yourdon–DeMarco) conventions worth keeping: every **process** has at least one input **and** one output flow (no "black-hole" or "miracle" processes); **flows are labelled with the data** they carry, never with control; and **stores and external entities never connect directly** to one another — a flow to/from a store or entity always passes through a process. DFDs are **leveled**: a level-0 _context_ diagram explodes into numbered sub-processes (`1.0`, `1.1`, …).
+
+## Supported
+
+- **External entity** (`.external`, sharp rectangle), **process** (`.process`, circle, with a `.process-id` number), and **data store** (`.store`, open two-line rectangle, with a `.store-id` tag).
+- **Data flows** as `<arrow head="open">` labelled with the data; request/response pairs bowed apart with `spline` or fractional anchors.
+- **Threat-model flavor:** **trust zones** (`.zone`, a dashed enclosing region with a notch label) and **trust boundaries** (`.boundary`, a free vertical or `.horizontal` dashed line) that flows visibly cross — all kept **monochrome**.
+
+**Done by hand:** process/store numbering and leveling are authored (you write `1.0`, `D1`, …); there is no automatic level explosion.
+
 ## Core components
 
 ```html

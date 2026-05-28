@@ -2,6 +2,22 @@
 
 Read [`COMPONENTS.md`](COMPONENTS.md) first for boxes, `<arrow>`, and anchors.
 
+## What it is
+
+A **sequence diagram** (a UML interaction diagram) shows how participants exchange messages **over time**: each participant owns a vertical _lifeline_ and messages are horizontal arrows between lifelines, read **top to bottom** in time order. Core rules: time flows downward; a message leaves the sender and arrives at a point on the receiver's lifeline; an _activation_ marks the span a participant is processing a call; and _combined fragments_ (`alt`/`opt`/`loop`/…) frame conditional or repeated regions. See the [UML reference](https://www.uml-diagrams.org/sequence-diagrams.html). Here time is the grid's `row` axis and each participant is a `col`umn — you place the message endpoints and the kit draws the lifelines and arrows.
+
+## Supported
+
+- **Participants** as `<lifeline>`s, auto-labelled at **both ends** (header + cloned footer row).
+- **Messages** between two `<point>`s on the same `row`: synchronous (`head="triangle"`), reply/return (`line="dashed"`), asynchronous (`head="open"`), and bidirectional (`tail="open" head="open"`) — mirroring Mermaid's `->>` / `-->>` / `-)` / `<<->>`.
+- **Self-calls** (a participant messaging itself) as a side-bowed `spline`.
+- **Activation bars** (`<activation>`), including **nested** activations on one lifeline.
+- **Combined fragments** (`<fragment>` + `<guard>`): `alt`, `opt`, `loop`, `ref`, `par`, or any operator label, with multiple operands and dashed separators.
+- **Section dividers** (`<divider>`) to split a long run into phases.
+- **Step numbers**: written into the message label yourself (there is no auto-numbering).
+
+**Not built-in:** lifeline create/destroy markers, gates, and interaction-occurrence boxes have no dedicated component — approximate them with the existing primitives if you need them.
+
 Declare participants in order; the `sequence` class builds the grid columns. Each participant is a `<lifeline>` (a header box with a dashed vertical beneath it); the kit automatically clones each header into a **footer row** at the bottom, so participants are labelled at both ends (as Mermaid/PlantUML do). A message is an `<arrow>` between two `<point>`s placed in the same time `row`.
 
 Excerpt from `tests/cases/sequence-basic/ours.html` — a render-verified golden (our rendering of Mermaid `sequenceDiagram` demos).
