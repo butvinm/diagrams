@@ -7,6 +7,14 @@
  * (CSS + runtime), wait for the runtime to finish drawing connectors, then
  * screenshot the <diagram> element at a high device scale factor.
  *
+ *   node render.mjs <input.html> <output.html> --html
+ *
+ * With --html it instead emits a self-contained, embeddable HTML file (markup +
+ * inlined kit CSS/JS, plus KaTeX inlined only when the diagram uses math). No
+ * browser is launched — the kit runs live in the consumer's browser, so an
+ * embedded diagram stays responsive (gaps flex, breakpoints reflow, connectors
+ * redraw on resize) and its text stays selectable.
+ *
  * Runs both in-repo and from a fresh plugin install:
  *   - Playwright is resolved normally; if it is missing (fresh install), it is
  *     npm-installed into the plugin root once, on first use.
@@ -31,11 +39,20 @@ const KATEX_CSS = path.join(KATEX_DIR, "katex.min.css");
 const KATEX_JS = path.join(KATEX_DIR, "katex.min.js");
 const KATEX_AUTORENDER = path.join(KATEX_DIR, "auto-render.min.js");
 
-const [input, output] = process.argv.slice(2);
+const argv = process.argv.slice(2);
+const htmlMode = argv.includes("--html");
+const [input, output] = argv.filter((a) => !a.startsWith("--"));
 if (!input || !output) {
-  console.error("usage: render.mjs <input.html> <output.png>");
+  console.error("usage: render.mjs <input.html> <output.png>\n       render.mjs <input.html> <output.html> --html");
   process.exit(2);
 }
+
+// --html: emit a self-contained, embeddable HTML file. Pure inlining, no browser.
+if (htmlMode) {
+  emitStandaloneHtml(input, output);
+  process.exit(0);
+}
+
 const scale = Number(process.env.DG_SCALE || 2);
 
 const { chromium } = await loadPlaywright();
@@ -69,6 +86,49 @@ try {
   console.log(`rendered ${input} -> ${output} @${scale}x`);
 } finally {
   await browser.close();
+}
+
+// Emit a self-contained, embeddable HTML file: the authored markup followed by
+// the inlined kit CSS + runtime (and KaTeX inlined only when the diagram uses
+// math). Assets go *after* the authored content so the cascade/order matches
+// what the renderer injects at run time. The kit runs live in the embedding
+// browser — keeping the diagram responsive and its text selectable.
+function emitStandaloneHtml(inputPath, outputPath) {
+  const authored = fs.readFileSync(path.resolve(inputPath), "utf8");
+  const css = fs.readFileSync(KIT_CSS, "utf8");
+  const kit = fs.readFileSync(KIT_JS, "utf8");
+
+  // Math is opt-in by delimiter: \( … \), \[ … \], or $$ … $$ (no lone $).
+  const usesMath = /\\\(|\\\[|\$\$/.test(authored);
+
+  let assets = `<style>\n${css}\n</style>\n`;
+  if (usesMath) {
+    if (!fs.existsSync(KATEX_CSS)) {
+      console.error("[dg] diagram uses math but vendored KaTeX is missing; emitting without it");
+    } else {
+      assets += `<style>\n${inlineKatexFonts(fs.readFileSync(KATEX_CSS, "utf8"))}\n</style>\n`;
+      assets += `<script>\n${fs.readFileSync(KATEX_JS, "utf8")}\n</script>\n`;
+      assets += `<script>\n${fs.readFileSync(KATEX_AUTORENDER, "utf8")}\n</script>\n`;
+    }
+  }
+  // type="module" matches how the renderer loads the kit (it uses import-less
+  // top-level code, but module scope keeps its helpers off the global object).
+  assets += `<script type="module">\n${kit}\n</script>\n`;
+
+  fs.writeFileSync(path.resolve(outputPath), `${authored.trimEnd()}\n${assets}`);
+  console.log(`emitted ${inputPath} -> ${outputPath} (self-contained${usesMath ? ", +KaTeX" : ""})`);
+}
+
+// Rewrite KaTeX's `url(fonts/NAME.woff2)` references to inline data: URIs so the
+// emitted file is fully offline. Only woff2 is inlined (the format browsers try
+// first); the now-dangling woff/ttf fallbacks are never fetched.
+function inlineKatexFonts(katexCss) {
+  return katexCss.replace(/url\(fonts\/([^)]+\.woff2)\)/g, (match, file) => {
+    const fontPath = path.join(KATEX_DIR, "fonts", file);
+    if (!fs.existsSync(fontPath)) return match;
+    const b64 = fs.readFileSync(fontPath).toString("base64");
+    return `url(data:font/woff2;base64,${b64})`;
+  });
 }
 
 // Resolve Playwright, bootstrapping the plugin's deps on first use if absent.
