@@ -18,13 +18,14 @@ The browser is the layout engine — which is why this is **Node, not Python** (
 - `diagrams/skills/diagrams/references/COMPONENTS.md` — the components, attributes, and styles (core), with one file per type (`SEQUENCE.md`, `STATE.md`, `CLASS.md`, `DEPLOYMENT.md`); **read before authoring or extending diagram types**
 - `.claude/skills/dev/SKILL.md` — **dev workflow; read before changing the framework or touching goldens**
 - `tests/` — self-contained cases: `cases/<name>/{INTENT.md, ours.html, golden.png, ref.mmd?}` (golden committed; `ours/ref/diff.png` regenerated + gitignored) and `run.mjs`
+- `compose.yaml` + `.github/workflows/test.yml` — the pinned-image test environment (local) and CI; goldens are rendered/blessed here, not on bare metal
 - `README.md` + `docs/` — human docs: lean landing page, then `docs/GUIDE.md` (authoring) and `docs/DEVELOPMENT.md` (harness/tests). Keep these in sync with the plugin's `COMPONENTS.md` and dev skill, which are authoritative.
 
 ## Commands
 
 - Render: `node diagrams/render/render.mjs <in.html> <out.png>` (`DG_SCALE=3` = sharper)
-- Test: `npm test` (render all → pixel-diff vs golden → build `tests/gallery.html`)
-- Bless goldens: `npm run test:update` — **only after visual verification** (below)
+- Test: `npm run test:docker` (render all → pixel-diff vs golden → build `tests/gallery.html`) — runs in the pinned Playwright image (`compose.yaml`), identical to CI. Bare-metal `npm test` drifts on fonts; do not use it for golden comparison.
+- Bless goldens: `npm run test:docker:update` — **only after visual verification** (below); blesses container renders so they match CI.
 
 ## Hard rules
 
@@ -44,12 +45,14 @@ The browser is the layout engine — which is why this is **Node, not Python** (
 - `<diagram> <lifeline> <point> <arrow>` are plain _unknown_ HTML elements swept post-layout — no custom-element registration.
 - `arrow` `anchor` is **space-separated**: `anchor="right left"` (src dst). A hyphen would clash with compound names like `top-left`.
 - Never put `-->` inside an HTML comment — it closes the comment and leaks text into the diagram.
-- Goldens are environment-sensitive (Chromium build + fonts); diff tolerance is 0.5% in `tests/run.mjs`.
+- Goldens are environment-sensitive (Chromium build + fonts), so they are rendered and blessed **only** in the pinned Docker image (`compose.yaml`, `mcr.microsoft.com/playwright:v1.60.0-noble`) — never on bare metal, where the host's fonts differ and every case drifts. CI (`.github/workflows/test.yml`) uses the same image. Keep the image tag in lockstep with the `playwright` version in `package.json`. `DG_NO_SANDBOX=1` (set by the Docker env) lets Chromium launch as root in the container. Diff tolerance is 0.5% in `tests/run.mjs`.
 
 ## Status
 
 Implemented: **`sequence`**, **state/FSM** (generic `stack` layout + `.state`/`.initial`/`.final` components), **`class`** (multi-compartment `.class` boxes on your own CSS grid; `head="hollow"` for UML generalization), and **`deployment`** (`.node` containers holding nested `.artifact` boxes; communication paths via `head="none"`). Engine supports `straight`/`spline` paths, named + fractional edge anchors, and a `curvature` knob. Markers: `triangle`/`hollow`/`open`/`diamond`/`filled`. Mermaid references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium) and appear in the comparison gallery; cases carry an optional `ref.mmd` — except deployment, which has no Mermaid equivalent.
 
 Distribution: `render/render.mjs` self-bootstraps — if `playwright` is missing it `npm install`s into `${CLAUDE_PLUGIN_ROOT}` (plugin has its own `diagrams/package.json`) on first use, and launches Playwright's Chromium or falls back to system Chrome/Edge. Verified from a clean copy with no `node_modules` and no browser download. `node_modules/` is gitignored, so the marketplace clone ships clean.
+
+Testing/CI: the suite renders and blesses goldens **only** inside the pinned Playwright Docker image (`compose.yaml`, `mcr.microsoft.com/playwright:v1.60.0-noble`) — `npm run test:docker` and `npm run test:docker:update` locally, `.github/workflows/test.yml` (push/PR) in CI, all the same image. The goldens were re-blessed in this image and verified bit-for-bit reproducible (0.000% diff). The bare-metal `npm test` path still works but drifts on host fonts and is not authoritative. Renderers honor `DG_NO_SANDBOX=1` to launch Chromium as root in a container. No git remote yet, so CI is wired but not running until one is added.
 
 Roadmap: the four planned UML types (sequence, state, class, deployment) are all shipped. No type work queued.

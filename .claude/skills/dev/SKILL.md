@@ -41,12 +41,16 @@ tests/
 ## Test harness
 
 ```bash
-npm test            # render all cases, diff against goldens, rebuild gallery.html
-npm run test:update # bless current renders as goldens (ONLY after sign-off)
+npm run test:docker         # render all cases, diff against goldens, rebuild gallery.html
+npm run test:docker:update  # bless current renders as goldens (ONLY after sign-off)
 ```
 
-`npm test` exits non-zero on pixel-diff failures. New cases (no golden yet) are
-reported as `new` and are **not** auto-blessed.
+Both wrap `compose.yaml` (`mcr.microsoft.com/playwright:v1.60.0-noble`), which pins Chromium **and** the system font set — so renders match CI and the committed goldens bit-for-bit.
+The bare `npm test` / `npm run test:update` run the harness directly against your host's Chromium and fonts; that is only correct _inside_ that image (which is exactly what CI does).
+**Never render or bless on bare metal** — the host's fonts differ and every case drifts (see the caveat below).
+
+`npm run test:docker` exits non-zero on pixel-diff failures.
+New cases (no golden yet) are reported as `new` and are **not** auto-blessed.
 
 ## Mandatory visual verification before blessing a golden
 
@@ -54,8 +58,7 @@ Snapshot diffing only proves _stability_, not _correctness_ — a wrong golden
 gets frozen forever. So a golden may be created or updated **only after a vision
 pass confirms the render is actually correct.**
 
-When a case is `new`, or an intentional change makes `npm test` fail (the diff is
-expected), do this before `npm run test:update`:
+When a case is `new`, or an intentional change makes `npm run test:docker` fail (the diff is expected), do this before `npm run test:docker:update`:
 
 1. Render is at `tests/cases/<name>/ours.png`; intent at `tests/cases/<name>/INTENT.md`.
 2. **Launch a subagent** (Agent tool, general-purpose) whose job is to _look_:
@@ -63,15 +66,18 @@ expected), do this before `npm run test:update`:
    per `INTENT.md`: are all elements present? do arrows connect the right boxes
    with the right heads/line styles? any overlap, clipping, or stray text? does
    the layout match the description? Return a clear PASS/FAIL + specific issues.
-3. If FAIL, fix the HTML/CSS/kit and re-render; repeat. Only on PASS run
-   `npm run test:update` to bless.
+3. If FAIL, fix the HTML/CSS/kit and re-render; repeat. Only on PASS run `npm run test:docker:update` to bless.
 
 The vision judge is advisory (LLMs are fallible) — you may overrule it, but never
 bless a golden you have not visually confirmed.
 
-## Caveat: goldens are environment-sensitive
+## Caveat: goldens are environment-sensitive — so they live in Docker
 
-Renders depend on the Chromium build and installed fonts. Goldens are reliable on
-a consistent environment (same machine/CI image); expect diffs across different
-font stacks. Keep the `MAX_DIFF_RATIO` tolerance in `tests/run.mjs` modest rather
-than zero.
+Renders depend on the Chromium build **and** the installed fonts.
+The CSS font stack (`-apple-system, "Segoe UI", Roboto, …`) resolves to whatever fonts the host happens to have, so the same markup renders at different glyph widths on different machines — boxes resize, connectors land elsewhere, and the diff blows past `MAX_DIFF_RATIO`.
+(Measured: moving from bare-metal Manjaro into the container shifted all 13 cases — most by enough to change the diagram's pixel dimensions — purely on fonts, with the Chromium revision held constant.)
+
+The fix is to pin the environment: `compose.yaml` uses `mcr.microsoft.com/playwright:v1.60.0-noble`, whose tag locks both the bundled Chromium and a fixed font set.
+**Goldens are rendered and blessed only in that image** (`npm run test:docker[:update]`), and CI (`.github/workflows/test.yml`) runs the identical image, so local, golden, and CI agree bit-for-bit.
+Keep the image tag in lockstep with the `playwright` version in `package.json`.
+The `MAX_DIFF_RATIO` tolerance in `tests/run.mjs` then only has to absorb tiny AA noise, not font drift.
