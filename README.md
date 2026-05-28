@@ -8,24 +8,6 @@ So the layout is **manual but adaptive**. You decide the arrangement, not a gues
 
 The usual cost of writing layout by hand is verbosity. The answer: **you don't write it — Claude does.** This ships as a Claude Code plugin; you describe the diagram, Claude emits the HTML, you nudge a value, re-render.
 
-<p align="center">
-  <img src="tests/cases/sequence-basic/golden.png" height="210" alt="sequence diagram" />
-  &nbsp;&nbsp;&nbsp;
-  <img src="tests/cases/state-basic/golden.png" height="210" alt="state machine" />
-  &nbsp;&nbsp;&nbsp;
-  <img src="tests/cases/class-basic/golden.png" height="210" alt="class diagram" />
-</p>
-
-<p align="center"><sub>All rendered by the tool — laid out in CSS, no coordinates.</sub></p>
-
-## Why
-
-- **You decide, not a solver** — the arrangement comes from CSS you (or Claude) write, never from a layout engine's guesses.
-- **Adaptive, not hardcoded** — you declare structure (grid/flex/relative), not pixels; boxes size to their content and connectors re-attach on re-render.
-- **No routing** — a connector is a pure function of its two anchor points and a path style; it never bends around things on its own.
-- **Real HTML/CSS** — rich labels are just markup (icons, badges, multi-line), styling is CSS. Nothing reinvented.
-- **Clean output** — headless Chromium screenshots at 2–3×: sharp in READMEs, slides, and docs.
-
 ## Quickstart
 
 Install the plugin in Claude Code:
@@ -37,22 +19,29 @@ Install the plugin in Claude Code:
 
 Then describe the diagram — _"draw a login sequence: Alice → auth service → DB, returning a token"_ — and Claude authors the HTML, renders it to PNG, inspects the result, and iterates until it matches. The first render auto-installs a headless browser (or reuses system Chrome/Edge).
 
+## Examples
+
+**Sequence** · [source](tests/cases/sequence-basic/ours.html)
+
+![sequence diagram](docs/examples/sequence.png)
+
+**State / FSM** · [source](tests/cases/state-basic/ours.html)
+
+![state machine](docs/examples/state.png)
+
+**Class** · [source](tests/cases/class-basic/ours.html)
+
+![class diagram](docs/examples/class.png)
+
+**Deployment** · [source](tests/cases/deployment-basic/ours.html)
+
+![deployment diagram](docs/examples/deployment.png)
+
 ## Documentation
 
 - [Authoring guide](docs/GUIDE.md) — how it works, and writing a diagram by example.
 - [Component reference](diagrams/skills/diagrams/references/COMPONENTS.md) — every component, attribute, and style.
 - [Development](docs/DEVELOPMENT.md) — the test harness, goldens, and the comparison gallery.
-
-## Diagram types
-
-| Type        | Status |
-| ----------- | ------ |
-| Sequence    | ✅     |
-| State / FSM | ✅     |
-| Class       | ✅     |
-| Deployment  | ✅     |
-
-Everything is boxes + arrows under the hood; a "type" is just a layout convention and a few CSS styles on top of one engine.
 
 ## Credits
 
