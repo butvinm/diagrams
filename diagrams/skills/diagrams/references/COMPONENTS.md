@@ -10,6 +10,7 @@ This file is the **core** — the components used in every diagram. For a specif
 - [`STATE.md`](STATE.md) — state machines / FSM.
 - [`CLASS.md`](CLASS.md) — UML class diagrams.
 - [`DEPLOYMENT.md`](DEPLOYMENT.md) — UML deployment diagrams.
+- [`DFD.md`](DFD.md) — data flow diagrams (+ threat model: trust zones & boundaries).
 
 ## `<diagram>`
 
@@ -29,6 +30,7 @@ A box is **any HTML element** you place inside the `<diagram>` and give an `id` 
 - `.final` — a ringed dot / bullseye (final pseudo-state).
 - `.class` — a multi-compartment UML class box (`.class-name` + `.class-section` rows; see `CLASS.md`).
 - `.node` / `.artifact` — a deployment node container and a nested artifact box (see `DEPLOYMENT.md`).
+- `.external` / `.process` / `.store` — a DFD external entity (sharp rectangle), process (circle), and data store (open two-line rectangle); `.zone` / `.boundary` add trust zones and trust-boundary lines (see `DFD.md`).
 - `<lifeline col="...">` — a participant header in a `sequence` diagram.
 
 ```html
@@ -64,6 +66,6 @@ Its attributes:
 
 **Label content** is the arrow's children — plain text or arbitrary HTML (`<div class="badge">…</div>`, icons, multi-line). It is positioned just above the connector midpoint.
 
-**UML edge cheatsheet:** generalization (inheritance) = `head="hollow"`; realization = `head="hollow" line="dashed"`; dependency = `head="open" line="dashed"`; aggregation = `head="diamond"`; composition = `head="filled"`. (`head="triangle"` is the _filled_ triangle used for sequence messages.) For class boxes and these relationships in context, see [`CLASS.md`](CLASS.md). Deployment communication path = `head="none"` (a plain solid line); see [`DEPLOYMENT.md`](DEPLOYMENT.md).
+**UML edge cheatsheet:** generalization (inheritance) = `head="hollow"`; realization = `head="hollow" line="dashed"`; dependency = `head="open" line="dashed"`; aggregation = `head="diamond"`; composition = `head="filled"`. (`head="triangle"` is the _filled_ triangle used for sequence messages.) For class boxes and these relationships in context, see [`CLASS.md`](CLASS.md). Deployment communication path = `head="none"` (a plain solid line); see [`DEPLOYMENT.md`](DEPLOYMENT.md). DFD data flow = `head="open"` (a thin open arrowhead) labelled with the data; see [`DFD.md`](DFD.md).
 
 > Avoid `-->` inside HTML comments — it closes the comment early and leaks text into the diagram.

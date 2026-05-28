@@ -15,7 +15,7 @@ The browser is the layout engine — which is why this is **Node, not Python** (
 - `diagrams/` — the shippable plugin (kit, render, skills, command, manifest)
 - `diagrams/kit/{primitives.css,kit.mjs}` — components & styles + connector engine
 - `diagrams/render/render.mjs` — html → png CLI
-- `diagrams/skills/diagrams/references/COMPONENTS.md` — the components, attributes, and styles (core), with one file per type (`SEQUENCE.md`, `STATE.md`, `CLASS.md`, `DEPLOYMENT.md`); **read before authoring or extending diagram types**
+- `diagrams/skills/diagrams/references/COMPONENTS.md` — the components, attributes, and styles (core), with one file per type (`SEQUENCE.md`, `STATE.md`, `CLASS.md`, `DEPLOYMENT.md`, `DFD.md`); **read before authoring or extending diagram types**
 - `.claude/skills/dev/SKILL.md` — **dev workflow; read before changing the framework or touching goldens**
 - `tests/` — self-contained cases: `cases/<name>/{INTENT.md, ours.html, golden.png, ref.mmd?}` (golden committed; `ours/ref/diff.png` regenerated + gitignored) and `run.mjs`
 - `compose.yaml` + `.github/workflows/test.yml` — the pinned-image test environment (local) and CI; goldens are rendered/blessed here, not on bare metal
@@ -49,10 +49,10 @@ The browser is the layout engine — which is why this is **Node, not Python** (
 
 ## Status
 
-Implemented: **`sequence`**, **state/FSM** (generic `stack` layout + `.state`/`.initial`/`.final` components), **`class`** (multi-compartment `.class` boxes on your own CSS grid; `head="hollow"` for UML generalization), and **`deployment`** (`.node` containers holding nested `.artifact` boxes; communication paths via `head="none"`). Engine supports `straight`/`spline` paths, named + fractional edge anchors, and a `curvature` knob. Markers: `triangle`/`hollow`/`open`/`diamond`/`filled`. Mermaid references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium) and appear in the comparison gallery; cases carry an optional `ref.mmd` — except deployment, which has no Mermaid equivalent.
+Implemented: **`sequence`**, **state/FSM** (generic `stack` layout + `.state`/`.initial`/`.final` components), **`class`** (multi-compartment `.class` boxes on your own CSS grid; `head="hollow"` for UML generalization), **`deployment`** (`.node` containers holding nested `.artifact` boxes; communication paths via `head="none"`), and **`dfd`** (data flow diagrams: `.external` rectangle / `.process` circle / `.store` open two-line rectangle, data flows via `head="open"`; threat-model flavor adds `.zone` trust regions and `.boundary` trust-boundary lines, all pure CSS + author layout, monochrome). Engine supports `straight`/`spline` paths, named + fractional edge anchors, and a `curvature` knob. Markers: `triangle`/`hollow`/`open`/`diamond`/`filled`. Mermaid references render offline (`tests/lib/render-mermaid.mjs`, reusing our Chromium) and appear in the comparison gallery; cases carry an optional `ref.mmd` — except deployment and DFD, which have no Mermaid equivalent.
 
 Distribution: `render/render.mjs` self-bootstraps — if `playwright` is missing it `npm install`s into `${CLAUDE_PLUGIN_ROOT}` (plugin has its own `diagrams/package.json`) on first use, and launches Playwright's Chromium or falls back to system Chrome/Edge. Verified from a clean copy with no `node_modules` and no browser download. `node_modules/` is gitignored, so the marketplace clone ships clean.
 
 Testing/CI: the suite renders and blesses goldens **only** inside the pinned Playwright Docker image (`compose.yaml`, `mcr.microsoft.com/playwright:v1.60.0-noble`) — `npm run test:docker` and `npm run test:docker:update` locally, `.github/workflows/test.yml` (push/PR) in CI, all the same image. The goldens were re-blessed in this image and verified bit-for-bit reproducible (0.000% diff). The bare-metal `npm test` path still works but drifts on host fonts and is not authoritative. Renderers honor `DG_NO_SANDBOX=1` to launch Chromium as root in a container. No git remote yet, so CI is wired but not running until one is added.
 
-Roadmap: the four planned UML types (sequence, state, class, deployment) are all shipped. No type work queued.
+Roadmap: the four planned UML types (sequence, state, class, deployment) are all shipped, plus **`dfd`** (data flow / threat model) as a fifth, non-UML type. No type work queued.
