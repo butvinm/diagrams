@@ -13,6 +13,18 @@ npm run test:docker:update  # bless goldens (only after a visual check)
 
 Each case is a self-contained folder under `tests/cases/<name>/`: `INTENT.md` (what it should show), `ours.html` (the diagram), an optional `ref.mmd` (Mermaid equivalent), and the committed `golden.png`. The `ours.png`, `ref.png`, and `diff.png` are regenerated and gitignored.
 
+## Published gallery (GitHub Pages)
+
+`tests/gallery.html` above is the **dev** comparison view (intent / Mermaid / ours / golden, regenerated, gitignored). The **public** showcase is separate:
+
+```bash
+npm run gallery   # node tests/build-gallery.mjs -> ./site
+```
+
+`build-gallery.mjs` writes `./site` (gitignored): a live, user-resizable hero embed of the `class-responsive` diagram, plus one card per diagram type (the committed golden + links to the case source and a live embed). It needs **no browser** — it copies the Docker-blessed goldens for images and reuses `render.mjs --html` (pure inlining) for the embeds. So a lightweight Node-only workflow, [`.github/workflows/pages.yml`](../.github/workflows/pages.yml), builds and deploys it to GitHub Pages on every push to `master` — independent of the Docker test workflow. (Enable Pages → "GitHub Actions" in the repo settings once.)
+
+`render.mjs --html` itself emits a self-contained, embeddable copy of any diagram; see the [embedding reference](../diagrams/skills/diagrams/references/EMBED.md).
+
 ## Why the suite runs in Docker
 
 Renders depend on the Chromium build **and** the installed fonts. The CSS font stack resolves to whatever fonts the machine has, so identical markup renders at different glyph widths on different hosts — boxes resize, connectors shift, and the diff exceeds tolerance. (In practice, moving the suite from a bare-metal Linux box into the container shifted all 13 cases on fonts alone, even with the Chromium revision unchanged.)

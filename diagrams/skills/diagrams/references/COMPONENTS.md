@@ -13,6 +13,8 @@ This file is the **core** — the components used in every diagram. For a specif
 - [`DFD.md`](DFD.md) — data flow diagrams (+ threat model: trust zones & boundaries).
 - [`FLOWCHART.md`](FLOWCHART.md) — flowcharts (process flow: terminal / step / decision / I/O / subroutine / database shapes).
 
+For embedding a diagram **live in a web page** — responsive `fluid` diagrams plus self-contained HTML output (`render.mjs --html`) — see [`EMBED.md`](EMBED.md).
+
 ## `<diagram>`
 
 The root, and the positioning context for the connector overlay. `class` selects a layout style:
@@ -21,6 +23,8 @@ The root, and the positioning context for the connector overlay. `class` selects
 - `class="stack"` — a vertical centered column, handy for state machines and simple flows (see `STATE.md`).
 
 Without a class, `<diagram>` is a plain block — use your own CSS (flex/grid/absolute) to place children, give each box an `id`, and connect with `<arrow>`.
+
+By default a `<diagram>` is `width: max-content` — it shrink-wraps its content, so the PNG screenshot crops tight. Add **`fluid`** (`class="… fluid"`) to make it `width: 100%` instead, so it fills its container and a responsive layout (`space-between` gutters, `@media` breakpoints) has room to adapt; the kit redraws connectors when the box resizes. Use `fluid` for diagrams you embed live in a page — see [`EMBED.md`](EMBED.md).
 
 ## Boxes
 

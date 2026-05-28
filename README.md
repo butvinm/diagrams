@@ -49,11 +49,30 @@ Then describe the diagram — _"draw a login sequence: Alice → auth service �
 
 <img src="tests/cases/sequence-math/golden.png" height="360" alt="sequence diagram with LaTeX math labels" />
 
+**Responsive / embeddable** · [source](tests/cases/class-responsive/ours.html)
+
+<img src="tests/cases/class-responsive/golden.png" height="360" alt="responsive class diagram that reflows from four columns to two" />
+
+## Embed in a page
+
+A diagram doesn't have to stay a PNG. Emit a **self-contained HTML** file and embed it live — text stays selectable, it's crisp at any zoom, and a `fluid` diagram reflows with its container:
+
+```bash
+node diagrams/render/render.mjs diagram.html diagram.embed.html --html
+```
+
+```html
+<iframe src="diagram.embed.html" style="width:100%;border:0"></iframe>
+```
+
+The file is fully self-contained (kit + KaTeX inlined when needed), so it works offline. See the [embedding guide](diagrams/skills/diagrams/references/EMBED.md) and the **[live gallery](https://butvinm.github.io/diagrams/)** (the hero is a resizable embed you can drag to watch it reflow).
+
 ## Documentation
 
 - [Authoring guide](docs/GUIDE.md) — how it works, and writing a diagram by example.
 - [Component reference](diagrams/skills/diagrams/references/COMPONENTS.md) — every component, attribute, and style.
-- [Development](docs/DEVELOPMENT.md) — the test harness, goldens, and the comparison gallery.
+- [Embedding](diagrams/skills/diagrams/references/EMBED.md) — `fluid` responsive diagrams and self-contained HTML output.
+- [Development](docs/DEVELOPMENT.md) — the test harness, goldens, the comparison gallery, and the published GitHub Pages gallery.
 
 ## Credits
 
