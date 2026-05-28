@@ -1,0 +1,32 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>dfd-basic</title>
+
+<style>
+  /* No layout preset — a left-to-right flow as a centered flex row. */
+  diagram.dfd {
+    display: flex;
+    align-items: center;
+    gap: 104px;
+    padding: 52px 64px;
+  }
+</style>
+
+<diagram class="dfd">
+  <div class="external" id="user">User</div>
+
+  <div class="process" id="validate">
+    <span class="process-id">1.0</span>
+    <span>Validate Login</span>
+  </div>
+
+  <div class="store" id="creds"><span class="store-id">D1</span> Credentials</div>
+
+  <!-- User and process: request carries credentials, reply carries a token. -->
+  <arrow from="user" to="validate" anchor="right left" path="spline" curvature="0.22" head="open">credentials</arrow>
+  <arrow from="validate" to="user" anchor="left right" path="spline" curvature="0.22" head="open">token</arrow>
+
+  <!-- Process and store: look the user up, get the stored record back. -->
+  <arrow from="validate" to="creds" anchor="right left" path="spline" curvature="0.22" head="open">lookup</arrow>
+  <arrow from="creds" to="validate" anchor="left right" path="spline" curvature="0.22" head="open">result</arrow>
+</diagram>

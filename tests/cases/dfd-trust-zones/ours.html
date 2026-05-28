@@ -1,0 +1,49 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>dfd-trust-zones</title>
+
+<style>
+  /* No layout preset — external entity, then two trust zones, in a row. */
+  diagram.dfd {
+    display: flex;
+    align-items: center;
+    gap: 92px;
+    padding: 56px 64px;
+  }
+  /* The Internal Network zone stacks its two elements vertically. */
+  #z-internal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 64px;
+  }
+</style>
+
+<diagram class="dfd">
+  <div class="external" id="user">User</div>
+
+  <div class="zone" id="z-dmz">
+    <div class="zone-label">DMZ</div>
+    <div class="process" id="frontend">
+      <span class="process-id">1.0</span>
+      <span>Web Frontend</span>
+    </div>
+  </div>
+
+  <div class="zone" id="z-internal">
+    <div class="zone-label">Internal Network</div>
+    <div class="process" id="app">
+      <span class="process-id">2.0</span>
+      <span>App Logic</span>
+    </div>
+    <div class="store" id="orders"><span class="store-id">D1</span> Orders</div>
+  </div>
+
+  <!-- Cross-zone flows: into the DMZ, then DMZ into the Internal Network. -->
+  <arrow from="user" to="frontend" anchor="right left" head="open">request</arrow>
+  <arrow from="frontend" to="app" anchor="right left" head="open">order</arrow>
+
+  <!-- Inside the Internal Network: a write/read pair on offset columns. -->
+  <arrow from="app" to="orders" anchor="bottom:0.32 top:0.32" head="open">write</arrow>
+  <arrow from="orders" to="app" anchor="top:0.68 bottom:0.68" head="open">read</arrow>
+</diagram>

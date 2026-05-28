@@ -37,6 +37,10 @@ Then describe the diagram — _"draw a login sequence: Alice → auth service �
 
 <img src="tests/cases/deployment-basic/golden.png" height="360" alt="deployment diagram" />
 
+**Data Flow** · [source](tests/cases/dfd-basic/ours.html)
+
+<img src="tests/cases/dfd-basic/golden.png" height="360" alt="data flow diagram" />
+
 ## Documentation
 
 - [Authoring guide](docs/GUIDE.md) — how it works, and writing a diagram by example.

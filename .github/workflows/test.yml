@@ -2,6 +2,7 @@ name: tests
 
 on:
   push:
+    branches: [master] # post-merge validation; PR branches are covered by pull_request below
   pull_request:
 
 jobs:

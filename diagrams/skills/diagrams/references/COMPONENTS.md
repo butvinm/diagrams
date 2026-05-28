@@ -10,6 +10,7 @@ This file is the **core** — the components used in every diagram. For a specif
 - [`STATE.md`](STATE.md) — state machines / FSM.
 - [`CLASS.md`](CLASS.md) — UML class diagrams.
 - [`DEPLOYMENT.md`](DEPLOYMENT.md) — UML deployment diagrams.
+- [`DFD.md`](DFD.md) — data flow diagrams (+ threat model: trust zones & boundaries).
 
 ## `<diagram>`
 
@@ -29,6 +30,7 @@ A box is **any HTML element** you place inside the `<diagram>` and give an `id` 
 - `.final` — a ringed dot / bullseye (final pseudo-state).
 - `.class` — a multi-compartment UML class box (`.class-name` + `.class-section` rows; see `CLASS.md`).
 - `.node` / `.artifact` — a deployment node container and a nested artifact box (see `DEPLOYMENT.md`).
+- `.external` / `.process` / `.store` — a DFD external entity (sharp rectangle), process (circle), and data store (open two-line rectangle); `.zone` / `.boundary` add trust zones and trust-boundary lines (see `DFD.md`).
 - `<lifeline col="...">` — a participant header in a `sequence` diagram.
 
 ```html
@@ -47,23 +49,25 @@ Then connect any two boxes by `id`: `<arrow from="idle" to="db">query</arrow>`.
 
 Its attributes:
 
-| Attribute   | Values                                                    | Default         | Meaning                                                                      |
-| ----------- | --------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------- |
-| `from`      | element id                                                | —               | source element                                                               |
-| `to`        | element id                                                | —               | target element                                                               |
-| `anchor`    | `"<src> <dst>"`                                           | `center center` | edge points to connect (see below)                                           |
-| `path`      | `straight`, `spline`                                      | `straight`      | line shape (`spline` = bowed Bézier)                                         |
-| `curvature` | number                                                    | `0.18`          | spline bow as a fraction of chord length; sign of bow flips with direction   |
-| `head`      | `triangle`, `hollow`, `open`, `diamond`, `filled`, `none` | `triangle`      | arrowhead at `to` end (`hollow` = unfilled triangle, for UML generalization) |
-| `tail`      | same as `head`                                            | `none`          | marker at `from` end                                                         |
-| `line`      | `solid`, `dashed`, `dotted`                               | `solid`         | stroke style                                                                 |
+| Attribute      | Values                                                    | Default         | Meaning                                                                             |
+| -------------- | --------------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------- |
+| `from`         | element id                                                | —               | source element                                                                      |
+| `to`           | element id                                                | —               | target element                                                                      |
+| `anchor`       | `"<src> <dst>"`                                           | `center center` | edge points to connect (see below)                                                  |
+| `path`         | `straight`, `spline`                                      | `straight`      | line shape (`spline` = bowed Bézier)                                                |
+| `curvature`    | number                                                    | `0.18`          | spline bow as a fraction of chord length; sign of bow flips with direction          |
+| `head`         | `triangle`, `hollow`, `open`, `diamond`, `filled`, `none` | `triangle`      | arrowhead at `to` end (`hollow` = unfilled triangle, for UML generalization)        |
+| `tail`         | same as `head`                                            | `none`          | marker at `from` end                                                                |
+| `line`         | `solid`, `dashed`, `dotted`                               | `solid`         | stroke style                                                                        |
+| `label-pos`    | `center`, `head`, `tail`, or a `0`–`1` fraction           | `center`        | where along the connector the label sits (`head` = near `to`, `tail` = near `from`) |
+| `label-anchor` | `center`, `top`, `bottom`, `left`, `right`                | `center`        | which side of the label is pinned to that point (`center` = on the line)            |
 
 **Anchor names:** `top`, `bottom`, `left`, `right`, `center`, `top-left`, `top-right`, `bottom-left`, `bottom-right`. Space-separated: first token is the source edge, second is the target edge. A single token applies to both ends.
 
 **Fractional edge anchors:** `"<side>:<frac>"` attaches at a point along an edge — e.g. `bottom:0.3` is 30% across the bottom edge, `left:0.5` is mid-left. Use these so multiple connectors leave/arrive at a box without piling onto one point (e.g. a back-and-forth pair of transitions).
 
-**Label content** is the arrow's children — plain text or arbitrary HTML (`<div class="badge">…</div>`, icons, multi-line). It is positioned just above the connector midpoint.
+**Label content** is the arrow's children — plain text or arbitrary HTML (`<div class="badge">…</div>`, icons, multi-line). By default it is centered on the connector midpoint; use `label-pos` to slide it along the line toward the `head` or `tail` end, and `label-anchor` to pin a different side of the label to that point (e.g. `label-anchor="top"` to sit above the line, `left`/`right` to sit beside a vertical connector). There is no collision avoidance — placement is a pure function of the connector, like the connector itself. Each `label-anchor` and `label-pos` value is rendered side by side in the `tests/cases/label-placement` case.
 
-**UML edge cheatsheet:** generalization (inheritance) = `head="hollow"`; realization = `head="hollow" line="dashed"`; dependency = `head="open" line="dashed"`; aggregation = `head="diamond"`; composition = `head="filled"`. (`head="triangle"` is the _filled_ triangle used for sequence messages.) For class boxes and these relationships in context, see [`CLASS.md`](CLASS.md). Deployment communication path = `head="none"` (a plain solid line); see [`DEPLOYMENT.md`](DEPLOYMENT.md).
+**UML edge cheatsheet:** generalization (inheritance) = `head="hollow"`; realization = `head="hollow" line="dashed"`; dependency = `head="open" line="dashed"`; aggregation = `head="diamond"`; composition = `head="filled"`. (`head="triangle"` is the _filled_ triangle used for sequence messages.) For class boxes and these relationships in context, see [`CLASS.md`](CLASS.md). Deployment communication path = `head="none"` (a plain solid line); see [`DEPLOYMENT.md`](DEPLOYMENT.md). DFD data flow = `head="open"` (a thin open arrowhead) labelled with the data; see [`DFD.md`](DFD.md).
 
 > Avoid `-->` inside HTML comments — it closes the comment early and leaks text into the diagram.

@@ -1,0 +1,41 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>dfd-trust-boundary</title>
+
+<style>
+  /* No layout preset — entity, boundary line, then the trusted process + store. */
+  diagram.dfd {
+    display: flex;
+    align-items: center;
+    gap: 76px;
+    padding: 56px 64px;
+  }
+  /* Make the boundary a tall centered rule rather than stretching to row height. */
+  #tb {
+    align-self: center;
+    height: 188px;
+  }
+</style>
+
+<diagram class="dfd">
+  <div class="external" id="user">User</div>
+
+  <div class="boundary" id="tb">
+    <div class="boundary-label">Internet&nbsp;|&nbsp;Trusted</div>
+  </div>
+
+  <div class="process" id="api">
+    <span class="process-id">1.0</span>
+    <span>API</span>
+  </div>
+
+  <div class="store" id="sessions"><span class="store-id">D1</span> Sessions</div>
+
+  <!-- User and API: the request/response pair crosses the trust boundary. -->
+  <arrow from="user" to="api" anchor="right left" path="spline" curvature="0.2" head="open">login</arrow>
+  <arrow from="api" to="user" anchor="left right" path="spline" curvature="0.2" head="open">session id</arrow>
+
+  <!-- API and store: entirely on the trusted side. -->
+  <arrow from="api" to="sessions" anchor="right left" path="spline" curvature="0.2" head="open">store</arrow>
+  <arrow from="sessions" to="api" anchor="left right" path="spline" curvature="0.2" head="open">fetch</arrow>
+</diagram>
