@@ -1,0 +1,41 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>flowchart-database</title>
+
+<style>
+  /* Left-to-right flow with a fan-out then fan-in: A spreads to three caches
+     (column 2), they converge on the warehouse C (column 3), which fans out to
+     three reports (column 4). All nodes are cylinders (data stores). */
+  diagram.flow {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    align-items: center;
+    justify-items: center;
+    gap: 30px 76px;
+    padding: 40px 56px;
+  }
+</style>
+
+<diagram class="flow">
+  <div class="database" id="a" style="grid-column: 1; grid-row: 2">Source</div>
+  <div class="database" id="b1" style="grid-column: 2; grid-row: 1">Cache 1</div>
+  <div class="database" id="b2" style="grid-column: 2; grid-row: 2">Cache 2</div>
+  <div class="database" id="b3" style="grid-column: 2; grid-row: 3">Cache 3</div>
+  <div class="database" id="c" style="grid-column: 3; grid-row: 2">Warehouse</div>
+  <div class="database" id="d" style="grid-column: 4; grid-row: 1">Laptop</div>
+  <div class="database" id="e" style="grid-column: 4; grid-row: 2">iPhone</div>
+  <div class="database" id="f" style="grid-column: 4; grid-row: 3">Car</div>
+
+  <!-- Fan-out: source replicates to three caches. -->
+  <arrow from="a" to="b1" anchor="right left">Get money</arrow>
+  <arrow from="a" to="b2" anchor="right left">Get money</arrow>
+  <arrow from="a" to="b3" anchor="right left">Get money</arrow>
+  <!-- Fan-in: the caches converge on the warehouse. -->
+  <arrow from="b1" to="c" anchor="right left"></arrow>
+  <arrow from="b2" to="c" anchor="right left"></arrow>
+  <arrow from="b3" to="c" anchor="right left"></arrow>
+  <!-- Fan-out: the warehouse serves three reports. -->
+  <arrow from="c" to="d" anchor="right left">One</arrow>
+  <arrow from="c" to="e" anchor="right left">Two</arrow>
+  <arrow from="c" to="f" anchor="right left">Three</arrow>
+</diagram>

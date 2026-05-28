@@ -11,6 +11,7 @@ This file is the **core** — the components used in every diagram. For a specif
 - [`CLASS.md`](CLASS.md) — UML class diagrams.
 - [`DEPLOYMENT.md`](DEPLOYMENT.md) — UML deployment diagrams.
 - [`DFD.md`](DFD.md) — data flow diagrams (+ threat model: trust zones & boundaries).
+- [`FLOWCHART.md`](FLOWCHART.md) — flowcharts (process flow: terminal / step / decision / I/O / subroutine / database shapes).
 
 ## `<diagram>`
 
@@ -31,6 +32,7 @@ A box is **any HTML element** you place inside the `<diagram>` and give an `id` 
 - `.class` — a multi-compartment UML class box (`.class-name` + `.class-section` rows; see `CLASS.md`).
 - `.node` / `.artifact` — a deployment node container and a nested artifact box (see `DEPLOYMENT.md`).
 - `.external` / `.process` / `.store` — a DFD external entity (sharp rectangle), process (circle), and data store (open two-line rectangle); `.zone` / `.boundary` add trust zones and trust-boundary lines (see `DFD.md`).
+- `.terminal` / `.step` / `.decision` / `.io` / `.subroutine` / `.database` / `.preparation` — flowchart node shapes: stadium terminal, process rectangle, decision diamond, I/O parallelogram, predefined-process box, cylinder, and preparation hexagon (see `FLOWCHART.md`).
 - `<lifeline col="...">` — a participant header in a `sequence` diagram.
 
 ```html

@@ -1,0 +1,31 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>flowchart-subroutine</title>
+
+<style>
+  /* Left-to-right flow on an explicit grid: the A→B→C chain runs along the
+     middle row, then C fans out to the three outcomes stacked in column 4. */
+  diagram.flow {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    align-items: center;
+    justify-items: center;
+    gap: 28px 76px;
+    padding: 40px 56px;
+  }
+</style>
+
+<diagram class="flow">
+  <div class="subroutine" id="a" style="grid-column: 1; grid-row: 2">Start</div>
+  <div class="subroutine" id="b" style="grid-column: 2; grid-row: 2">Go shopping</div>
+  <div class="subroutine" id="c" style="grid-column: 3; grid-row: 2">Decide</div>
+  <div class="subroutine" id="d" style="grid-column: 4; grid-row: 1">Laptop</div>
+  <div class="subroutine" id="e" style="grid-column: 4; grid-row: 2">iPhone</div>
+  <div class="subroutine" id="f" style="grid-column: 4; grid-row: 3">Car</div>
+
+  <arrow from="a" to="b" anchor="right left">Get money</arrow>
+  <arrow from="b" to="c" anchor="right left"></arrow>
+  <arrow from="c" to="d" anchor="right left">One</arrow>
+  <arrow from="c" to="e" anchor="right left">Two</arrow>
+  <arrow from="c" to="f" anchor="right left">Three</arrow>
+</diagram>

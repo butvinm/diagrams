@@ -41,6 +41,10 @@ Then describe the diagram — _"draw a login sequence: Alice → auth service �
 
 <img src="tests/cases/dfd-basic/golden.png" height="360" alt="data flow diagram" />
 
+**Flowchart** · [source](tests/cases/flowchart-basic/ours.html)
+
+<img src="tests/cases/flowchart-basic/golden.png" height="360" alt="flowchart" />
+
 **Math (LaTeX via KaTeX)** · [source](tests/cases/sequence-math/ours.html)
 
 <img src="tests/cases/sequence-math/golden.png" height="360" alt="sequence diagram with LaTeX math labels" />
