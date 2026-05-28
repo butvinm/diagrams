@@ -9,7 +9,7 @@ allowed-tools: Read, Write, Edit, Bash
 
 Diagrams are authored as plain HTML using a small set of components and CSS styles for layout (grid / flex / relative). **The browser is the layout engine; nothing is auto-placed or auto-routed.** A headless Chromium renders the file to PNG.
 
-The reference lives in `references/`: read `COMPONENTS.md` for the core (boxes, `<arrow>`, anchors), then read the file for the diagram type you're drawing — `SEQUENCE.md`, `STATE.md`, `CLASS.md`, `DEPLOYMENT.md`, `DFD.md`, `FLOWCHART.md`. Read these before authoring; load only the type you need.
+The reference lives in `references/`: read `COMPONENTS.md` for the core (boxes, `<arrow>`, anchors), then read the file for the diagram type you're drawing — `SEQUENCE.md`, `STATE.md`, `CLASS.md`, `DEPLOYMENT.md`, `DFD.md`, `FLOWCHART.md`. Read these before authoring; load only the type you need. To embed a diagram **live in a web page** (responsive `fluid` diagrams, self-contained HTML via `render.mjs --html`), read `EMBED.md`.
 
 ## Workflow
 
@@ -18,7 +18,7 @@ The reference lives in `references/`: read `COMPONENTS.md` for the core (boxes, 
    ```bash
    node "${CLAUDE_PLUGIN_ROOT}/render/render.mjs" path/to/diagram.html path/to/out.png
    ```
-   First run installs the renderer's dependencies automatically. It uses Playwright's Chromium if present, else falls back to system Chrome/Edge; only if no browser exists at all does it ask you to run `npx playwright install chromium`. Needs Node + npm. Set `DG_SCALE=3` for sharper output.
+   First run installs the renderer's dependencies automatically. It uses Playwright's Chromium if present, else falls back to system Chrome/Edge; only if no browser exists at all does it ask you to run `npx playwright install chromium`. Needs Node + npm. Set `DG_SCALE=3` for sharper output. To emit a self-contained, embeddable HTML file instead of a PNG, add `--html` (no browser needed) — see `references/EMBED.md`.
 3. **Verify — do not skip.** Read the produced PNG back and confirm it matches the request: every element present, arrows connect the intended boxes, no overlap or clipping, labels legible, correct heads/line styles. Layout is manual, so the only way to know it is right is to look. Adjust the HTML/CSS and re-render until correct, then show the user.
 
 ## Principles

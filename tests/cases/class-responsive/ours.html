@@ -1,0 +1,76 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>class-responsive</title>
+
+<style>
+  /* Responsive class diagram: the diagram is `fluid` (fills its container), the
+     author's grid uses space-between so gutters flex with width, and a media
+     query reflows 4 columns -> 2. Every arrow converges on Shape's bottom-CENTER
+     (UML tree-style generalization), so the same fixed anchors stay clean in
+     both layouts. The kit redraws connectors on resize. */
+  diagram.classes .uml {
+    width: 100%;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(4, max-content);
+    justify-content: space-between;   /* gutters flex with page width */
+    column-gap: 24px;                 /* a floor so boxes never touch  */
+    align-items: start;
+    row-gap: 120px;
+    padding: 28px 40px 40px;
+  }
+  #shape   { grid-column: 1 / -1; grid-row: 1; justify-self: center; }
+  #circle  { grid-column: 1; grid-row: 2; }
+  #rect    { grid-column: 2; grid-row: 2; }
+  #tri     { grid-column: 3; grid-row: 2; }
+  #ellipse { grid-column: 4; grid-row: 2; }
+
+  @media (max-width: 780px) {
+    diagram.classes .uml { grid-template-columns: repeat(2, max-content); }
+    #shape   { grid-column: 1 / -1; grid-row: 1; }
+    #circle  { grid-column: 1; grid-row: 2; }
+    #rect    { grid-column: 2; grid-row: 2; }
+    #tri     { grid-column: 1; grid-row: 3; }
+    #ellipse { grid-column: 2; grid-row: 3; }
+  }
+</style>
+
+<diagram class="classes fluid">
+  <div class="uml">
+    <div class="class" id="shape">
+      <div class="class-name"><div class="stereotype">«abstract»</div><span class="abstract">Shape</span></div>
+      <div class="class-section"><div>#origin: Point</div><div>#color: Color</div></div>
+      <div class="class-section"><div>+area(): float</div><div>+draw(c: Canvas): void</div></div>
+    </div>
+
+    <div class="class" id="circle">
+      <div class="class-name">Circle</div>
+      <div class="class-section"><div>+radius: float</div></div>
+      <div class="class-section"><div>+area(): float</div><div>+draw(c): void</div></div>
+    </div>
+
+    <div class="class" id="rect">
+      <div class="class-name">Rectangle</div>
+      <div class="class-section"><div>+width: float</div><div>+height: float</div></div>
+      <div class="class-section"><div>+area(): float</div><div>+draw(c): void</div></div>
+    </div>
+
+    <div class="class" id="tri">
+      <div class="class-name">Triangle</div>
+      <div class="class-section"><div>+base: float</div><div>+height: float</div></div>
+      <div class="class-section"><div>+area(): float</div></div>
+    </div>
+
+    <div class="class" id="ellipse">
+      <div class="class-name">Ellipse</div>
+      <div class="class-section"><div>+rx: float</div><div>+ry: float</div></div>
+      <div class="class-section"><div>+area(): float</div><div>+draw(c): void</div></div>
+    </div>
+  </div>
+
+  <!-- generalization: all four concretes converge on Shape's bottom-center -->
+  <arrow from="circle"  to="shape" anchor="top bottom" head="hollow"></arrow>
+  <arrow from="rect"    to="shape" anchor="top bottom" head="hollow"></arrow>
+  <arrow from="tri"     to="shape" anchor="top bottom" head="hollow"></arrow>
+  <arrow from="ellipse" to="shape" anchor="top bottom" head="hollow"></arrow>
+</diagram>

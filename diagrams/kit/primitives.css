@@ -24,6 +24,14 @@ diagram {
   font-family: var(--dg-font);
 }
 
+/* Fluid / responsive embeds: fill the container instead of shrink-wrapping, so
+ * the author's grid/flex (space-between gaps, @media breakpoints) has room to
+ * adapt. The default above stays max-content for tight PNG screenshots; opt in
+ * with <diagram class="… fluid">. The kit redraws connectors on resize. */
+diagram.fluid {
+  width: 100%;
+}
+
 /* The SVG layer the kit injects for lifelines and connectors. */
 .dg-overlay {
   position: absolute;
