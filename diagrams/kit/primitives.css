@@ -206,3 +206,124 @@ diagram.stack {
   text-align: center;
   white-space: nowrap;
 }
+
+/* ---- data flow diagram (DFD) ---- */
+
+/* External entity (a source/sink of data outside the system): a sharp-cornered
+ * rectangle — the square corners read as "external" against the rounded states
+ * and nodes. */
+.external {
+  display: block;
+  padding: 10px 18px;
+  border: 1.5px solid var(--dg-box-border);
+  background: var(--dg-box-bg);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Process (transforms data): the classic DFD circle. aspect-ratio keeps it round
+ * as content grows; keep labels short (a number + a verb phrase). */
+.process {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  min-width: 96px;
+  padding: 12px;
+  border: 1.5px solid var(--dg-box-border);
+  border-radius: 50%;
+  background: var(--dg-box-bg);
+  font-weight: 600;
+  text-align: center;
+}
+/* The process number (e.g. "1.0"), shown above the name. */
+.process-id {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+/* Data store (where data rests): an open-ended rectangle — top and bottom rules
+ * only, no sides (Yourdon/DeMarco). Edge anchors still come from the full box, so
+ * arrows attach to left/right normally. */
+.store {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 150px;
+  padding: 9px 16px;
+  border-top: 1.6px solid var(--dg-box-border);
+  border-bottom: 1.6px solid var(--dg-box-border);
+  background: var(--dg-box-bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+/* The store tag (e.g. "D1"), de-emphasized, to the left of the label. */
+.store-id { opacity: 0.7; }
+
+/* ---- threat-model overlay: trust zones & boundaries ---- */
+
+/* Trust zone: a dashed labelled region that encloses elements. Like the diagram
+ * itself it has no layout of its own — lay out its children with your own CSS.
+ * Sits behind its contents as a backdrop. */
+.zone {
+  position: relative;
+  z-index: 0;
+  display: block;
+  padding: 26px 20px 20px;
+  border: 1.6px dashed var(--dg-box-border);
+  border-radius: 8px;
+  background: transparent;
+}
+/* Zone name, in the top-left notch; the white background knocks out the border. */
+.zone-label {
+  position: absolute;
+  top: -9px;
+  left: 14px;
+  padding: 0 8px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* Trust boundary line: a free dashed rule the author places (typically as a flex
+ * item between two columns) to mark where data crosses a trust edge. Vertical by
+ * default; add `.horizontal` for a horizontal rule. The z-index lifts it above
+ * the connector overlay so it reads over the flows it crosses. */
+.boundary {
+  position: relative;
+  z-index: 3;
+  align-self: stretch;
+  min-height: 40px;
+  border-left: 2px dashed var(--dg-box-border);
+}
+.boundary.horizontal {
+  align-self: auto;
+  min-height: 0;
+  min-width: 40px;
+  border-left: none;
+  border-top: 2px dashed var(--dg-box-border);
+}
+/* Boundary label, centered on the line. */
+.boundary-label {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+.boundary.horizontal .boundary-label {
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
