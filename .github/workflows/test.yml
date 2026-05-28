@@ -1,0 +1,31 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # The same pinned image used locally (compose.yaml): identical Chromium AND font set, so renders match the committed goldens bit-for-bit.
+    # The image tag must stay in lockstep with the `playwright` version in package.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+    env:
+      DG_NO_SANDBOX: "1" # Chromium has no usable sandbox running as root in the container
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright # browsers are pre-installed in the image
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci --no-audit --no-fund --loglevel=error
+      - run: npm test
+      - name: Upload gallery + renders on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagrams-gallery
+          path: |
+            tests/gallery.html
+            tests/cases/**/ours.png
+            tests/cases/**/ref.png
+            tests/cases/**/diff.png
+          if-no-files-found: ignore

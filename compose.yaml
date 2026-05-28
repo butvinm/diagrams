@@ -1,0 +1,23 @@
+# Reproducible test environment.
+#
+# Renders depend on the Chromium build AND the system font set, so goldens are only stable on a fixed environment.
+# This image pins both: its tag matches our `playwright` dependency (v1.60.0) so the bundled Chromium is identical, and it ships a frozen font set.
+# Tests are blessed and run here — and CI uses the same image — so the suite is bit-for-bit reproducible.
+# Do NOT bless goldens on bare metal; the host's Chromium/fonts differ and every case will drift.
+#
+#   npm run test:docker          # render + diff vs golden
+#   npm run test:docker:update   # re-bless goldens (only after visual sign-off)
+services:
+  test:
+    image: mcr.microsoft.com/playwright:v1.60.0-noble
+    working_dir: /work
+    # Run as the host user (DG_UID/DG_GID, defaulting to 1000) so files written back through the bind mount — blessed goldens especially — aren't root-owned.
+    user: "${DG_UID:-1000}:${DG_GID:-1000}"
+    environment:
+      HOME: /tmp # writable home: an arbitrary uid has no /etc/passwd entry
+      DG_NO_SANDBOX: "1" # Chromium has no usable sandbox in the container
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright # browsers pre-installed in the image
+    volumes:
+      - .:/work # bind the repo so renders/goldens land on the host
+    # `npm ci` from the committed lockfile = a deterministic, image-matched install.
+    command: sh -c "npm ci --no-audit --no-fund --loglevel=error && npm test"
