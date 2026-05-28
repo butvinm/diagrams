@@ -1,4 +1,5 @@
 node_modules/
+site/
 tests/gallery.html
 tests/cases/*/ours.png
 tests/cases/*/ref.png

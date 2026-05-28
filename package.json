@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "render": "node diagrams/render/render.mjs",
+    "gallery": "node tests/build-gallery.mjs",
     "test": "node tests/run.mjs",
     "test:update": "node tests/run.mjs --update",
     "test:docker": "DG_UID=$(id -u) DG_GID=$(id -g) docker compose run --rm test",
