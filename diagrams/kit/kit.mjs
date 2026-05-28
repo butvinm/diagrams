@@ -54,25 +54,59 @@ function anchorPoint(box, name) {
   return (ANCHORS[name] || ANCHORS.center)(box);
 }
 
-// Returns the SVG path `d` and the on-path midpoint used to place the label.
-// A `spline` is a quadratic Bézier bowed perpendicular to the chord by
-// `k * length`; because the bow flips when the endpoints swap, two opposite
-// connectors between the same pair separate into a symmetric lens, and their
-// labels land on opposite sides instead of colliding at the chord midpoint.
+// Returns the SVG path `d` plus the data needed to sample a point along it
+// (`pathPoint` below). A `spline` is a quadratic Bézier bowed perpendicular to
+// the chord by `k * length`; because the bow flips when the endpoints swap, two
+// opposite connectors between the same pair separate into a symmetric lens, and
+// (with `label-pos` left at center) their labels land on opposite sides instead
+// of colliding at the chord midpoint. For a straight line the control `c` is
+// null; for a spline it is the Bézier control point.
 function connectorGeometry(p1, p2, shape, k = 0.18) {
-  const mx = (p1[0] + p2[0]) / 2;
-  const my = (p1[1] + p2[1]) / 2;
   if (shape !== "spline") {
-    return { d: `M ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]}`, mid: [mx, my] };
+    return { d: `M ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]}`, p1, p2, c: null };
   }
   const dx = p2[0] - p1[0];
   const dy = p2[1] - p1[1];
   const len = Math.hypot(dx, dy) || 1;
   const off = k * len;
-  const cx = mx + (-dy / len) * off;
-  const cy = my + (dx / len) * off;
-  const mid = [0.25 * p1[0] + 0.5 * cx + 0.25 * p2[0], 0.25 * p1[1] + 0.5 * cy + 0.25 * p2[1]];
-  return { d: `M ${p1[0]} ${p1[1]} Q ${cx} ${cy} ${p2[0]} ${p2[1]}`, mid };
+  const cx = (p1[0] + p2[0]) / 2 + (-dy / len) * off;
+  const cy = (p1[1] + p2[1]) / 2 + (dx / len) * off;
+  return { d: `M ${p1[0]} ${p1[1]} Q ${cx} ${cy} ${p2[0]} ${p2[1]}`, p1, p2, c: [cx, cy] };
+}
+
+// Point on the connector at parameter t in [0,1] (0 = from end, 1 = to end).
+// Straight: linear interpolation. Spline: the quadratic Bézier at t — at t=0.5
+// this is `0.25*p1 + 0.5*c + 0.25*p2`, the curve midpoint pulled toward the bow.
+function pathPoint({ p1, p2, c }, t) {
+  if (!c) return [p1[0] + (p2[0] - p1[0]) * t, p1[1] + (p2[1] - p1[1]) * t];
+  const mt = 1 - t;
+  return [
+    mt * mt * p1[0] + 2 * mt * t * c[0] + t * t * p2[0],
+    mt * mt * p1[1] + 2 * mt * t * c[1] + t * t * p2[1],
+  ];
+}
+
+// label-pos: where along the connector the label's anchor point sits. Keyword
+// or an explicit fraction (e.g. "0.7"). label-anchor: which point of the label
+// box is pinned there — "center" (default) puts the label on the line; the
+// others place it above/below/beside the point with no offset.
+const LABEL_POS = { tail: 0.18, center: 0.5, head: 0.82 };
+// transform pins a side of the label box to the point; dx/dy nudge the off-center
+// anchors a few px clear of the stroke so the label doesn't touch it (center sits
+// exactly on the line).
+const LABEL_GAP = 6;
+const LABEL_ANCHOR = {
+  center: { transform: "translate(-50%, -50%)", dx: 0, dy: 0 },
+  top: { transform: "translate(-50%, -100%)", dx: 0, dy: -LABEL_GAP },
+  bottom: { transform: "translate(-50%, 0)", dx: 0, dy: LABEL_GAP },
+  left: { transform: "translate(-100%, -50%)", dx: -LABEL_GAP, dy: 0 },
+  right: { transform: "translate(0, -50%)", dx: LABEL_GAP, dy: 0 },
+};
+function labelT(attr) {
+  if (!attr) return 0.5;
+  const n = parseFloat(attr);
+  if (Number.isFinite(n)) return Math.min(1, Math.max(0, n));
+  return LABEL_POS[attr] ?? 0.5;
 }
 
 function el(name, attrs = {}) {
@@ -164,11 +198,15 @@ function drawOverlay(diagram) {
     if (tail) path.setAttribute("marker-start", `url(#${tail})`);
     svg.appendChild(path);
 
-    // Place the arrow's label content just above the path midpoint.
+    // Place the arrow's label: pick a point along the connector (label-pos),
+    // then pin a side of the label box to it (label-anchor). Defaults: midpoint,
+    // centered on the line.
     if (a.textContent.trim() || a.children.length) {
-      a.style.left = `${geom.mid[0]}px`;
-      a.style.top = `${geom.mid[1] - 6}px`;
-      a.style.transform = "translate(-50%, -100%)";
+      const lp = pathPoint(geom, labelT(a.getAttribute("label-pos")));
+      const anchor = LABEL_ANCHOR[a.getAttribute("label-anchor")] || LABEL_ANCHOR.center;
+      a.style.left = `${lp[0] + anchor.dx}px`;
+      a.style.top = `${lp[1] + anchor.dy}px`;
+      a.style.transform = anchor.transform;
     }
   });
 
