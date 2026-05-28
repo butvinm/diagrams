@@ -41,6 +41,10 @@ Then describe the diagram — _"draw a login sequence: Alice → auth service �
 
 <img src="tests/cases/dfd-basic/golden.png" height="360" alt="data flow diagram" />
 
+**Math (LaTeX via KaTeX)** · [source](tests/cases/sequence-math/ours.html)
+
+<img src="tests/cases/sequence-math/golden.png" height="360" alt="sequence diagram with LaTeX math labels" />
+
 ## Documentation
 
 - [Authoring guide](docs/GUIDE.md) — how it works, and writing a diagram by example.
@@ -49,7 +53,7 @@ Then describe the diagram — _"draw a login sequence: Alice → auth service �
 
 ## Credits
 
-Mermaid (MIT) is used only to render reference images for side-by-side comparison; sources are noted in [`THIRD_PARTY.md`](THIRD_PARTY.md).
+[KaTeX](https://katex.org/) (MIT) is vendored to typeset LaTeX math in labels. Mermaid (MIT) is used only to render reference images for side-by-side comparison. Both are noted in [`THIRD_PARTY.md`](THIRD_PARTY.md).
 
 ## License
 

@@ -19,6 +19,8 @@ Renders depend on the Chromium build **and** the installed fonts. The CSS font s
 
 So `compose.yaml` pins both: `mcr.microsoft.com/playwright:v1.60.0-noble` ships a fixed Chromium (matching the `playwright` dependency) and a fixed font set. `npm run test:docker[:update]` wraps it, and CI ([`.github/workflows/test.yml`](../.github/workflows/test.yml)) runs the identical image — so your local renders, the committed goldens, and CI agree bit-for-bit. **Bless goldens only through `test:docker:update`**, never bare-metal `npm test`. When you bump `playwright` in `package.json`, bump the image tag in `compose.yaml` and the workflow to match, then re-bless (goldens may shift if Chromium changed).
 
+**Math is the one font-stable part.** LaTeX is typeset by KaTeX, whose woff2 fonts are **vendored in the plugin** (`diagrams/kit/vendor/katex/`) and ship with it, so the math glyphs are identical on every host. The surrounding labels still use the system font stack, so the Docker rule above is unchanged — bless math cases the same way. To update KaTeX, `npm install katex@<ver>` and re-copy `dist/{katex.min.css,katex.min.js,contrib/auto-render.min.js,fonts/*.woff2}` into the vendor dir.
+
 ## Blessing goldens
 
 Snapshot diffing catches _drift_, not _correctness_ — a wrong golden gets frozen forever. So before creating or updating a golden, verify the render visually (a vision pass that reads the PNG against the case's `INTENT.md`). Only then run `npm run test:update`.

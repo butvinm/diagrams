@@ -70,4 +70,16 @@ Its attributes:
 
 **UML edge cheatsheet:** generalization (inheritance) = `head="hollow"`; realization = `head="hollow" line="dashed"`; dependency = `head="open" line="dashed"`; aggregation = `head="diamond"`; composition = `head="filled"`. (`head="triangle"` is the _filled_ triangle used for sequence messages.) For class boxes and these relationships in context, see [`CLASS.md`](CLASS.md). Deployment communication path = `head="none"` (a plain solid line); see [`DEPLOYMENT.md`](DEPLOYMENT.md). DFD data flow = `head="open"` (a thin open arrowhead) labelled with the data; see [`DFD.md`](DFD.md).
 
+## Math (LaTeX via KaTeX)
+
+Any label or box content may contain LaTeX math, typeset by [KaTeX](https://katex.org/) (vendored with the plugin, so it works offline). Delimiters: `\(`…`\)` for **inline** math, and `\[`…`\]` or `$$`…`$$` for **display** math. A lone `$` is **not** a delimiter — it would clash with ordinary text. The kit typesets every `<diagram>` _before_ it measures geometry, so a math-sized label sets its box's size and connectors attach correctly.
+
+<!-- prettier-ignore -->
+```html
+<arrow from="a" to="b">\(A = g^{a} \bmod p\)</arrow>
+<divider row="4">shared secret \[ s = g^{ab} \bmod p \]</divider>
+```
+
+Math is optional: KaTeX is injected by the renderer, and if it is absent the kit still runs and leaves the source text untouched. See `tests/cases/sequence-math` (a render-verified golden) for inline and display math in context.
+
 > Avoid `-->` inside HTML comments — it closes the comment early and leaks text into the diagram.
