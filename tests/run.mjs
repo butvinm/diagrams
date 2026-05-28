@@ -22,7 +22,7 @@ const renderer = path.join(root, "diagrams/render/render.mjs");
 
 const UPDATE = process.argv.includes("--update");
 const PER_PIXEL_THRESHOLD = 0.1; // pixelmatch color sensitivity
-const MAX_DIFF_RATIO = 0.005; // up to 0.5% of pixels may differ (AA / env drift)
+const MAX_DIFF_RATIO = 0.0001; // 0.01%: renders are bit-for-bit deterministic in the pinned Docker image (every case diffs 0 pixels), so this is just a hair of slack against a stray pixel, not real drift tolerance
 
 // Each case is self-contained: tests/cases/<name>/ holds INTENT.md, ours.html,
 // the committed golden.png, optional ref.mmd, and generated ours/ref/diff.png.

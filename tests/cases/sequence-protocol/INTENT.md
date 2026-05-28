@@ -1,11 +1,13 @@
 # sequence-protocol
 
 Our rendering of a verification-protocol sequence diagram. The reference is the
-author's own PlantUML (`ref.puml`), copied verbatim from
+author's own PlantUML (`ref.puml`), adapted from
 `/home/butvinm/Dev/ITMO/thesis/thesis/diagrams/protocol-simple.puml` — not a
-Mermaid demo, so there is no `ref.mmd` and no Mermaid comparison render. This case
-exercises sequence features beyond the basic cases: many participants, section
-dividers, self-calls, and an `alt`/`else` frame.
+Mermaid demo, so there is no `ref.mmd` and no Mermaid comparison render. The
+original labels were in Russian; both `ref.puml` and `ours.html` have been
+translated to English here (message content, ordering, and structure preserved).
+This case exercises sequence features beyond the basic cases: many participants,
+section dividers, self-calls, and an `alt`/`else` frame.
 
 Six participants, left to right, each a header box over a dashed lifeline and
 labelled again in a footer row at the bottom:
@@ -14,29 +16,29 @@ labelled again in a footer row at the bottom:
 The flow is split into five labelled **section dividers** (a centered chip on a
 full-width rule), top to bottom:
 
-1. **Начало сессии верификации** — User → RClient → RService → VAgent → VService
+1. **Verification session start** — User → RClient → RService → VAgent → VService
    (`SessionOpen`), then dashed returns back to User (`VerificationSession`,
-   `Перенаправление с sid`); then User → VClient (`Запрос верификации (sid)`),
+   `Redirect with sid`); then User → VClient (`Verification request (sid)`),
    `RequestManifest` forwarded to VService and `Manifest` returned.
-2. **Совместная генерация ключей** — VClient/VAgent exchange `VClientPKShare` /
+2. **Collaborative key generation** — VClient/VAgent exchange `VClientPKShare` /
    `VAgentPKShare`, `VClientRLKRound1` / `VAgentRLKRound1`, `VClientRLKRound2` /
-   `Подтверждение`, `VClientGaloisShares`. VAgent has a **self-call**
-   `Иерархический вывод ключей`, then `InferEvalKeys` to VService, which has its
-   own **self-call** `Иерархический вывод ключей`, then dashed `Подтверждение`
+   `Acknowledgement`, `VClientGaloisShares`. VAgent has a **self-call**
+   `Hierarchical key derivation`, then `InferEvalKeys` to VService, which has its
+   own **self-call** `Hierarchical key derivation`, then dashed `Acknowledgement`
    returns.
-3. **Передача изображения и инференс** — User → VClient `Изображение`,
-   `EncryptedImage` forwarded to VService, VService **self-call** `Инференс`,
+3. **Image transfer and inference** — User → VClient `Image`,
+   `EncryptedImage` forwarded to VService, VService **self-call** `Inference`,
    dashed `InferenceResult` returned.
-4. **Расшифрование результата с имитозащитой** — VAgent **self-call**
-   `Аутентификация результата`, dashed `AuthenticatedResult` to VClient, then
+4. **Result decryption with integrity protection** — VAgent **self-call**
+   `Result authentication`, dashed `AuthenticatedResult` to VClient, then
    `PartialDecryption` to VAgent.
-5. **Завершение сессии верификации** — `VerdictNotification` to RService and
-   dashed `Подтверждение` back; redirect chain `Перенаправление на ресурс` back
-   to User; `Возврат на страницу ресурса` to RClient, `Запрос ресурса` to
+5. **Verification session completion** — `VerdictNotification` to RService and
+   dashed `Acknowledgement` back; redirect chain `Redirect to resource` back
+   to User; `Return to resource page` to RClient, `Resource request` to
    RService; then an **`alt` frame** (spanning User…RService) with two branches:
-   `[Положительный вердикт]` → `Ресурс` / `Отображение ресурса`, and
-   `[Отрицательный вердикт]` (a dashed separator) → `Отказ в доступе` /
-   `Сообщение об отказе`.
+   `[Positive verdict]` → `Resource` / `Display resource`, and
+   `[Negative verdict]` (a dashed separator) → `Access denied` /
+   `Denial message`.
 
 Expected rendering details:
 
@@ -53,8 +55,8 @@ Expected rendering details:
   bands across all six lifelines.
 - The `alt` fragment is a rectangle spanning User…RService (hugging those outer
   lifelines, not extending a half-column past RService), with an `alt` tab in the
-  top-left corner, the first guard `[Положительный вердикт]` beside the tab, and a
-  dashed mid-line carrying the `[Отрицательный вердикт]` guard between the two
+  top-left corner, the first guard `[Positive verdict]` beside the tab, and a
+  dashed mid-line carrying the `[Negative verdict]` guard between the two
   branches.
 
 Documented divergences from the PlantUML: the actor stick figure becomes a plain

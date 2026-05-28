@@ -80,4 +80,4 @@ The CSS font stack (`-apple-system, "Segoe UI", Roboto, …`) resolves to whatev
 The fix is to pin the environment: `compose.yaml` uses `mcr.microsoft.com/playwright:v1.60.0-noble`, whose tag locks both the bundled Chromium and a fixed font set.
 **Goldens are rendered and blessed only in that image** (`npm run test:docker[:update]`), and CI (`.github/workflows/test.yml`) runs the identical image, so local, golden, and CI agree bit-for-bit.
 Keep the image tag in lockstep with the `playwright` version in `package.json`.
-The `MAX_DIFF_RATIO` tolerance in `tests/run.mjs` then only has to absorb tiny AA noise, not font drift.
+The `MAX_DIFF_RATIO` tolerance in `tests/run.mjs` (0.01%) then only has to guard against a stray pixel — in the pinned image every case diffs exactly 0 pixels, so it's effectively zero, not drift tolerance.

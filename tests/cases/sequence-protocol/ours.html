@@ -31,16 +31,16 @@
   <activation col="vs" from="25" to="28"></activation>
   <activation col="vs" from="33" to="36"></activation>
 
-  <!-- ===== 1. Начало сессии верификации ===== -->
-  <divider row="1">1. Начало сессии верификации</divider>
+  <!-- ===== 1. Verification session start ===== -->
+  <divider row="1">1. Verification session start</divider>
 
   <point id="m2a" col="user" row="2"></point>
   <point id="m2b" col="rc"   row="2"></point>
-  <arrow from="m2a" to="m2b">Запрос ресурса</arrow>
+  <arrow from="m2a" to="m2b">Resource request</arrow>
 
   <point id="m3a" col="rc" row="3"></point>
   <point id="m3b" col="rs" row="3"></point>
-  <arrow from="m3a" to="m3b">Запрос ресурса</arrow>
+  <arrow from="m3a" to="m3b">Resource request</arrow>
 
   <point id="m4a" col="rs" row="4"></point>
   <point id="m4b" col="va" row="4"></point>
@@ -60,15 +60,15 @@
 
   <point id="m8a" col="rs" row="8"></point>
   <point id="m8b" col="rc" row="8"></point>
-  <arrow from="m8a" to="m8b" line="dashed">Перенаправление с sid</arrow>
+  <arrow from="m8a" to="m8b" line="dashed">Redirect with sid</arrow>
 
   <point id="m9a" col="rc"   row="9"></point>
   <point id="m9b" col="user" row="9"></point>
-  <arrow from="m9a" to="m9b" line="dashed">Перенаправление с sid</arrow>
+  <arrow from="m9a" to="m9b" line="dashed">Redirect with sid</arrow>
 
   <point id="m10a" col="user" row="10"></point>
   <point id="m10b" col="vc"   row="10"></point>
-  <arrow from="m10a" to="m10b">Запрос верификации (sid)</arrow>
+  <arrow from="m10a" to="m10b">Verification request (sid)</arrow>
 
   <point id="m11a" col="vc" row="11"></point>
   <point id="m11b" col="va" row="11"></point>
@@ -86,8 +86,8 @@
   <point id="m14b" col="vc" row="14"></point>
   <arrow from="m14a" to="m14b" line="dashed">Manifest</arrow>
 
-  <!-- ===== 2. Совместная генерация ключей ===== -->
-  <divider row="15">2. Совместная генерация ключей</divider>
+  <!-- ===== 2. Collaborative key generation ===== -->
+  <divider row="15">2. Collaborative key generation</divider>
 
   <point id="m16a" col="vc" row="16"></point>
   <point id="m16b" col="va" row="16"></point>
@@ -111,7 +111,7 @@
 
   <point id="m21a" col="va" row="21"></point>
   <point id="m21b" col="vc" row="21"></point>
-  <arrow from="m21a" to="m21b" line="dashed">Подтверждение</arrow>
+  <arrow from="m21a" to="m21b" line="dashed">Acknowledgement</arrow>
 
   <point id="m22a" col="vc" row="22"></point>
   <point id="m22b" col="va" row="22"></point>
@@ -120,7 +120,7 @@
   <!-- VAgent self-call -->
   <point id="m23a" col="va" row="23"></point>
   <point id="m23b" col="va" row="24"></point>
-  <arrow from="m23a" to="m23b" path="spline" curvature="-1.0" label-anchor="left">Иерархический вывод ключей</arrow>
+  <arrow from="m23a" to="m23b" path="spline" curvature="-1.0" label-anchor="left">Hierarchical key derivation</arrow>
 
   <point id="m25a" col="va" row="25"></point>
   <point id="m25b" col="vs" row="25"></point>
@@ -129,22 +129,22 @@
   <!-- VService self-call -->
   <point id="m26a" col="vs" row="26"></point>
   <point id="m26b" col="vs" row="27"></point>
-  <arrow from="m26a" to="m26b" path="spline" curvature="-1.0" label-anchor="left">Иерархический вывод ключей</arrow>
+  <arrow from="m26a" to="m26b" path="spline" curvature="-1.0" label-anchor="left">Hierarchical key derivation</arrow>
 
   <point id="m28a" col="vs" row="28"></point>
   <point id="m28b" col="va" row="28"></point>
-  <arrow from="m28a" to="m28b" line="dashed">Подтверждение</arrow>
+  <arrow from="m28a" to="m28b" line="dashed">Acknowledgement</arrow>
 
   <point id="m29a" col="va" row="29"></point>
   <point id="m29b" col="vc" row="29"></point>
-  <arrow from="m29a" to="m29b" line="dashed">Подтверждение</arrow>
+  <arrow from="m29a" to="m29b" line="dashed">Acknowledgement</arrow>
 
-  <!-- ===== 3. Передача изображения и инференс ===== -->
-  <divider row="30">3. Передача изображения и инференс</divider>
+  <!-- ===== 3. Image transfer and inference ===== -->
+  <divider row="30">3. Image transfer and inference</divider>
 
   <point id="m31a" col="user" row="31"></point>
   <point id="m31b" col="vc"   row="31"></point>
-  <arrow from="m31a" to="m31b">Изображение</arrow>
+  <arrow from="m31a" to="m31b">Image</arrow>
 
   <point id="m32a" col="vc" row="32"></point>
   <point id="m32b" col="va" row="32"></point>
@@ -157,19 +157,19 @@
   <!-- VService self-call -->
   <point id="m34a" col="vs" row="34"></point>
   <point id="m34b" col="vs" row="35"></point>
-  <arrow from="m34a" to="m34b" path="spline" curvature="-1.0" label-anchor="left">Инференс</arrow>
+  <arrow from="m34a" to="m34b" path="spline" curvature="-1.0" label-anchor="left">Inference</arrow>
 
   <point id="m36a" col="vs" row="36"></point>
   <point id="m36b" col="va" row="36"></point>
   <arrow from="m36a" to="m36b" line="dashed">InferenceResult</arrow>
 
-  <!-- ===== 4. Расшифрование результата с имитозащитой ===== -->
-  <divider row="37">4. Расшифрование результата с имитозащитой</divider>
+  <!-- ===== 4. Result decryption with integrity protection ===== -->
+  <divider row="37">4. Result decryption with integrity protection</divider>
 
   <!-- VAgent self-call -->
   <point id="m38a" col="va" row="38"></point>
   <point id="m38b" col="va" row="39"></point>
-  <arrow from="m38a" to="m38b" path="spline" curvature="-1.0" label-anchor="left">Аутентификация результата</arrow>
+  <arrow from="m38a" to="m38b" path="spline" curvature="-1.0" label-anchor="left">Result authentication</arrow>
 
   <point id="m40a" col="va" row="40"></point>
   <point id="m40b" col="vc" row="40"></point>
@@ -179,8 +179,8 @@
   <point id="m41b" col="va" row="41"></point>
   <arrow from="m41a" to="m41b">PartialDecryption</arrow>
 
-  <!-- ===== 5. Завершение сессии верификации ===== -->
-  <divider row="42">5. Завершение сессии верификации</divider>
+  <!-- ===== 5. Verification session completion ===== -->
+  <divider row="42">5. Verification session completion</divider>
 
   <point id="m43a" col="va" row="43"></point>
   <point id="m43b" col="rs" row="43"></point>
@@ -188,43 +188,43 @@
 
   <point id="m44a" col="rs" row="44"></point>
   <point id="m44b" col="va" row="44"></point>
-  <arrow from="m44a" to="m44b" line="dashed">Подтверждение</arrow>
+  <arrow from="m44a" to="m44b" line="dashed">Acknowledgement</arrow>
 
   <point id="m45a" col="va" row="45"></point>
   <point id="m45b" col="vc" row="45"></point>
-  <arrow from="m45a" to="m45b" line="dashed">Перенаправление на ресурс</arrow>
+  <arrow from="m45a" to="m45b" line="dashed">Redirect to resource</arrow>
 
   <point id="m46a" col="vc"   row="46"></point>
   <point id="m46b" col="user" row="46"></point>
-  <arrow from="m46a" to="m46b" line="dashed">Перенаправление на ресурс</arrow>
+  <arrow from="m46a" to="m46b" line="dashed">Redirect to resource</arrow>
 
   <point id="m47a" col="user" row="47"></point>
   <point id="m47b" col="rc"   row="47"></point>
-  <arrow from="m47a" to="m47b">Возврат на страницу ресурса</arrow>
+  <arrow from="m47a" to="m47b">Return to resource page</arrow>
 
   <point id="m48a" col="rc" row="48"></point>
   <point id="m48b" col="rs" row="48"></point>
-  <arrow from="m48a" to="m48b">Запрос ресурса</arrow>
+  <arrow from="m48a" to="m48b">Resource request</arrow>
 
   <!-- alt: positive vs negative verdict (frame spans User..RService) -->
   <fragment op="alt" col="user rs" row="49 54"></fragment>
-  <guard col="user rs" row="49">[Положительный вердикт]</guard>
+  <guard col="user rs" row="49">[Positive verdict]</guard>
 
   <point id="m50a" col="rs" row="50"></point>
   <point id="m50b" col="rc" row="50"></point>
-  <arrow from="m50a" to="m50b" line="dashed">Ресурс</arrow>
+  <arrow from="m50a" to="m50b" line="dashed">Resource</arrow>
 
   <point id="m51a" col="rc"   row="51"></point>
   <point id="m51b" col="user" row="51"></point>
-  <arrow from="m51a" to="m51b" line="dashed">Отображение ресурса</arrow>
+  <arrow from="m51a" to="m51b" line="dashed">Display resource</arrow>
 
-  <guard col="user rs" row="52" sep>[Отрицательный вердикт]</guard>
+  <guard col="user rs" row="52" sep>[Negative verdict]</guard>
 
   <point id="m53a" col="rs" row="53"></point>
   <point id="m53b" col="rc" row="53"></point>
-  <arrow from="m53a" to="m53b" line="dashed">Отказ в доступе</arrow>
+  <arrow from="m53a" to="m53b" line="dashed">Access denied</arrow>
 
   <point id="m54a" col="rc"   row="54"></point>
   <point id="m54b" col="user" row="54"></point>
-  <arrow from="m54a" to="m54b" line="dashed">Сообщение об отказе</arrow>
+  <arrow from="m54a" to="m54b" line="dashed">Denial message</arrow>
 </diagram>
