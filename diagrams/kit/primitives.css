@@ -421,3 +421,158 @@ diagram.stack {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* ---- flowchart ---- */
+
+/* Flowcharts have no layout preset: place the nodes with your own CSS (a grid is
+ * usually best for a branching flow; the `stack` preset works for a linear one)
+ * and connect them with <arrow>. These are just the node shapes. Edge anchors
+ * come from each node's bounding box, so arrows attach to top/bottom/left/right
+ * normally — for the diamond and the parallelogram those land on the shape's
+ * vertices/edge, which is exactly where flowchart links should meet them. */
+
+/* Terminal (start / end): a stadium / pill. */
+.terminal {
+  display: block;
+  padding: 10px 24px;
+  border: 1.5px solid var(--dg-box-border);
+  border-radius: 999px;
+  background: var(--dg-box-bg);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Process step: the default flowchart node, a (slightly rounded) rectangle. */
+.step {
+  display: block;
+  padding: 12px 20px;
+  border: 1.5px solid var(--dg-box-border);
+  border-radius: 3px;
+  background: var(--dg-box-bg);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Decision: a diamond / rhombus. Drawn with clip-path so the box stays
+ * axis-aligned (layout size == visual size, unlike a rotated square) and the
+ * top/bottom/left/right anchors land on the diamond's four vertices. The border
+ * is a 1.6px rim: the element is filled with the border color and clipped to a
+ * diamond; ::before is the same diamond inset by the rim, filled with the box
+ * color, and sits behind the label (z-index:-1) but over the rim. Keep labels
+ * short (the diamond pinches at the tips); use <br> or more padding if needed. */
+.decision {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 120px;
+  padding: 28px 30px;
+  background: var(--dg-box-border);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  font-weight: 600;
+  text-align: center;
+}
+.decision::before {
+  content: "";
+  position: absolute;
+  inset: 1.6px;
+  z-index: -1;
+  background: var(--dg-box-bg);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* Input / output: a parallelogram (same clip-path border trick as .decision).
+ * Generous horizontal padding clears the slanted sides. */
+.io {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 12px 36px;
+  background: var(--dg-box-border);
+  clip-path: polygon(16% 0%, 100% 0%, 84% 100%, 0% 100%);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+.io::before {
+  content: "";
+  position: absolute;
+  inset: 1.6px;
+  z-index: -1;
+  background: var(--dg-box-bg);
+  clip-path: polygon(16% 0%, 100% 0%, 84% 100%, 0% 100%);
+}
+
+/* Preparation: a hexagon (pointed left & right) — the classic loop-setup /
+ * initialization symbol. Same clip-path border trick as .decision / .io; the
+ * top and bottom edges are flat (so top/bottom anchors sit on them) and the
+ * left/right anchors land on the points. */
+.preparation {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 12px 34px;
+  background: var(--dg-box-border);
+  clip-path: polygon(14% 0%, 86% 0%, 100% 50%, 86% 100%, 14% 100%, 0% 50%);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+.preparation::before {
+  content: "";
+  position: absolute;
+  inset: 1.6px;
+  z-index: -1;
+  background: var(--dg-box-bg);
+  clip-path: polygon(14% 0%, 86% 0%, 100% 50%, 86% 100%, 14% 100%, 0% 50%);
+}
+
+/* Subroutine / predefined process: a rectangle with a vertical rule just inside
+ * each side. The two bars are painted as background gradients (1.5px wide, 7px
+ * in) over the box fill, within the outer border. */
+.subroutine {
+  display: block;
+  padding: 12px 28px;
+  border: 1.5px solid var(--dg-box-border);
+  border-radius: 2px;
+  background:
+    linear-gradient(var(--dg-box-border), var(--dg-box-border)) 7px 0 / 1.5px 100% no-repeat,
+    linear-gradient(var(--dg-box-border), var(--dg-box-border)) calc(100% - 7px) 0 / 1.5px 100% no-repeat,
+    var(--dg-box-bg);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Database: a cylinder. The body curves top and bottom via an elliptical
+ * border-radius (50% horizontal / 13px vertical); ::before redraws the top as a
+ * full ellipse so it reads as the open lid. Extra top padding clears the lid. */
+.database {
+  position: relative;
+  z-index: 1;
+  display: block;
+  /* Top padding clears the lid ellipse so the label sits in the body, not across
+     the lid line. */
+  padding: 34px 26px 16px;
+  border: 1.5px solid var(--dg-box-border);
+  border-radius: 50% / 13px;
+  background: var(--dg-box-bg);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+/* The lid's front rim only: an arc matching the body's top curve, 13px below it.
+ * The body border already draws the crown, so drawing just this bottom arc (not a
+ * full ellipse) avoids a doubled line at the top. */
+.database::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 26px;
+  border-radius: 50% / 13px;
+  border-bottom: 1.5px solid var(--dg-box-border);
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>flowchart-loop</title>
+
+<style>
+  /* A single top-down column. Generous LEFT padding reserves room for the loop's
+     back-edge to bow out clear of the boxes (there is no auto-routing). */
+  diagram.flow {
+    display: grid;
+    grid-template-columns: auto;
+    justify-items: center;
+    align-items: center;
+    gap: 44px;
+    padding: 44px 64px 44px 210px;
+  }
+</style>
+
+<diagram class="flow">
+  <div class="terminal" id="start">Start</div>
+  <div class="preparation" id="init">i = 0</div>
+  <div class="step" id="body">process item i</div>
+  <div class="step" id="incr">i = i + 1</div>
+  <div class="decision" id="more">i &lt; n?</div>
+  <div class="terminal" id="end">End</div>
+
+  <arrow from="start" to="init" anchor="bottom top"></arrow>
+  <arrow from="init" to="body" anchor="bottom top"></arrow>
+  <arrow from="body" to="incr" anchor="bottom top"></arrow>
+  <arrow from="incr" to="more" anchor="bottom top"></arrow>
+  <!-- The loop: the "yes" branch returns from the decision back up to the body.
+       It bows LEFT (negative curvature) into the reserved padding so it clears
+       the increment box — connectors are pure curves, nothing is routed. -->
+  <arrow from="more" to="body" anchor="left left" path="spline" curvature="-0.6" label-pos="0.5" label-anchor="left">yes</arrow>
+  <arrow from="more" to="end" anchor="bottom top">no</arrow>
+</diagram>

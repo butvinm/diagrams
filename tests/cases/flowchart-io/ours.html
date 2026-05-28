@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>flowchart-io</title>
+
+<style>
+  /* Same top-down 3-column grid as flowchart-basic, but the I/O nodes are
+     parallelograms. */
+  diagram.flow {
+    display: grid;
+    /* Equal-width columns so the decision (which spans all three) centers over
+       the middle outcome and the fan is symmetric. */
+    grid-template-columns: repeat(3, 160px);
+    justify-items: center;
+    align-items: center;
+    gap: 44px 36px;
+    padding: 40px 64px;
+  }
+  diagram.flow .span {
+    grid-column: 1 / -1;
+  }
+</style>
+
+<diagram class="flow">
+  <!-- Mermaid's source mixes trapezoid (Christmas, Go shopping) and parallelogram
+       (Laptop, iPhone) slants, plus a plain rectangle (Car); we provide one I/O
+       shape (.io) and render every I/O node with it, for a uniform fan. -->
+  <div class="io span" id="xmas">Christmas</div>
+  <div class="io span" id="shop">Go shopping</div>
+  <div class="decision span" id="think">Let me think?</div>
+  <div class="io" id="laptop">Laptop</div>
+  <div class="io" id="phone">iPhone</div>
+  <div class="io" id="car">Car</div>
+
+  <arrow from="xmas" to="shop" anchor="bottom top">Get money</arrow>
+  <arrow from="shop" to="think" anchor="bottom top"></arrow>
+  <arrow from="think" to="laptop" anchor="left top">One</arrow>
+  <arrow from="think" to="phone" anchor="bottom top">Two</arrow>
+  <arrow from="think" to="car" anchor="right top">Three</arrow>
+</diagram>
